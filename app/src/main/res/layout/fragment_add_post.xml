@@ -17,7 +17,7 @@
         android:layout_marginRight="8dp"
         android:hint="Write Something!!"
         app:counterEnabled="true"
-        app:counterMaxLength="60"
+        app:counterMaxLength="280"
         app:helperText="*Required"
         app:helperTextTextColor="@color/red"
         app:hintEnabled="true"
@@ -29,6 +29,7 @@
             android:id="@+id/addPostTextInputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="280"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 

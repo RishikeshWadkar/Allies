@@ -1,8 +1,9 @@
 package com.rishikeshwadkar.socialapp.models
 
 data class Post(
-    val text : String = "",
+    val text: String = "",
     val currentTime: Long = 0L,
-    val createdBy : User,
-    val likedBy : ArrayList<String> = ArrayList()
+    val createdBy: User = User(),
+    val likedBy: ArrayList<String> = ArrayList()
 )
+

@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.rishikeshwadkar.socialapp.dao.PostDao
 import com.rishikeshwadkar.socialapp.dao.UserDao
 import com.rishikeshwadkar.socialapp.models.User
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,6 +36,7 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     val userDao: UserDao = UserDao()
+    val postDao: PostDao = PostDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +51,7 @@ class SignInActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = Firebase.auth
 
-        submitButton.setOnClickListener {
 
-        }
 
         googleSIgnInButton.setOnClickListener {
             Log.i("myTag","Button Clicked")
@@ -119,7 +119,8 @@ class SignInActivity : AppCompatActivity() {
                     firebaseUser.displayName.toString(),
                     firebaseUser.photoUrl.toString())
 
-            userDao.addUser(user)
+            if(userDao.getUserById(user.uid).isCanceled)
+                userDao.addUser(user)
 
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -130,4 +131,7 @@ class SignInActivity : AppCompatActivity() {
             googleSIgnInButton.visibility = VISIBLE
         }
     }
+
+
+
 }

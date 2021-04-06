@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_posts" >
         <action
             android:id="@+id/action_postsFragment_to_addPostFragment"
-            app:destination="@id/addPostFragment" />
+            app:destination="@id/addPostFragment"
+            app:enterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/from_screen_to_top"
+            app:popEnterAnim="@anim/frop_top_to_screen"
+            app:popExitAnim="@anim/frop_top_to_down" />
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"

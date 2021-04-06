@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".PostsFragment">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Posts"
-        android:textSize="36sp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/postRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -27,9 +25,10 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
-        android:src="@drawable/ic_add"
+        android:contentDescription="TODO"
         app:backgroundTint="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="#FFFFFF" />
+        app:rippleColor="#FFFFFF"
+        app:srcCompat="@drawable/ic_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

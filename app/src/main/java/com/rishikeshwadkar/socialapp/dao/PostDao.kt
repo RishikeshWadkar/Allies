@@ -1,7 +1,9 @@
 package com.rishikeshwadkar.socialapp.dao
 
 import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.models.Post
@@ -13,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 
 class PostDao {
     private val db = FirebaseFirestore.getInstance()
-    private val postCollection = db.collection("posts")
+    val postCollection = db.collection("posts")
     private val auth = Firebase.auth
 
     fun addPost(text: String){
@@ -22,10 +24,10 @@ class PostDao {
             val userDao = UserDao()
             val user = userDao.getUserById(currentUserId).await().toObject(User::class.java)!!
             val currentTime: Long = System.currentTimeMillis()
-            Log.i("AddPost", text)
             val post = Post(text, currentTime, user)
             postCollection.document().set(post)
         }
 
     }
+
 }
