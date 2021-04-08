@@ -1,9 +1,12 @@
 package com.rishikeshwadkar.socialapp
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Color.red
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -12,6 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.internal.ViewUtils
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -41,7 +46,6 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
-
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -50,15 +54,61 @@ class SignInActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         auth = Firebase.auth
 
-
-
         googleSIgnInButton.setOnClickListener {
             Log.i("myTag","Button Clicked")
             signIn()
             progressBar.visibility = VISIBLE
             googleSIgnInButton.visibility = GONE
         }
+
+        submitButton.setOnClickListener {
+            loginUsingEmailAndPassword()
+        }
+
     }
+
+    private fun loginUsingEmailAndPassword() {
+        val name = textInputNameEditText.text
+        val emailID = emailAddressText.text
+        val phoneNo = textInputPhoneText.text
+        val pass = textInputPasswordText.text
+
+        if(name!!.isNotEmpty()){
+            if(emailID!!.isNotEmpty()){
+                if(phoneNo!!.isNotEmpty()){
+                    if(pass!!.isNotEmpty()){
+                        FirebaseAuth.getInstance().
+                        createUserWithEmailAndPassword(emailID.toString(), pass.toString())
+                                .addOnCompleteListener {
+                                    if(it.isSuccessful){
+                                        Log.d("main", it.result?.user!!.uid)
+                                        updateUIEmail(it.result?.user!!.uid,name.toString(),emailID.toString(),phoneNo.toString(),pass.toString())
+                                    }
+                                    else{
+                                        it.exception?.message?.let { it1 -> Log.d("main", it1)
+                                            val snackbar = Snackbar.make(constreaintLayout, it1,
+                                                    Snackbar.LENGTH_LONG).setAction("Action", null)
+                                            snackbar.setTextColor(Color.RED)
+                                            snackbar.show()
+
+                                        }
+                                    }
+                                }
+                    }else{
+                        textInputPasswordText.requestFocus()
+                    }
+                }else{
+                    textInputPhoneText.requestFocus()
+                }
+            } else{
+                emailAddressText.requestFocus()
+            }
+        } else{
+            textInputNameEditText.requestFocus()
+        }
+
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -116,10 +166,20 @@ class SignInActivity : AppCompatActivity() {
 
             val user = User(firebaseUser.uid,
                     firebaseUser.displayName.toString(),
-                    firebaseUser.photoUrl.toString())
+                    firebaseUser.photoUrl.toString(),"","","")
 
-            if(userDao.getUserById(user.uid).isCanceled)
-                userDao.addUser(user)
+            GlobalScope.launch(Dispatchers.IO) {
+                val userBool = userDao.getUserById(user.uid).await().toObject(User::class.java)
+
+                if(userBool == null){
+                    Log.d("user","inside if ${user.userDisplayName}")
+                    userDao.addUser(user)
+                }
+                else
+                    Log.d("user", "else ${user.userDisplayName}")
+            }
+
+
 
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -131,6 +191,15 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateUIEmail(uid: String, name: String, email: String, phoneNO: String, pass: String) {
 
+            Log.i("myTag","firebase user != NULL")
+            val imageUrl: String = "https://user-images.githubusercontent.com/59508176/114025201-83464600-9892-11eb-8856-5523f2f6de91.jpg"
+            val user = User(uid,name,imageUrl,email,phoneNO,pass)
+                userDao.addUser(user)
 
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+    }
 }
