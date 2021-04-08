@@ -35,8 +35,7 @@ class SignInActivity : AppCompatActivity() {
     private var TAG: String = "SignInActivity TAG"
     private lateinit var auth: FirebaseAuth
 
-    val userDao: UserDao = UserDao()
-    val postDao: PostDao = PostDao()
+    private val userDao: UserDao = UserDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

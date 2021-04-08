@@ -9,6 +9,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.rishikeshwadkar.socialapp.dao.PostDao
 import com.rishikeshwadkar.socialapp.models.Post
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_posts.*
 
 class PostsFragment : Fragment() {
 
-    private lateinit var adapter: PostAdapater
+    private lateinit var adapter: PostAdapter
     private lateinit var postDao: PostDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +39,7 @@ class PostsFragment : Fragment() {
             Navigation.findNavController(view).navigate(R.id.action_postsFragment_to_addPostFragment)
         }
         setUpRecyclerView()
+        val db = FirebaseFirestore.getInstance()
     }
 
     private fun setUpRecyclerView() {
@@ -45,8 +47,7 @@ class PostsFragment : Fragment() {
         val postCollection = postDao.postCollection
         val query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
         val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
-
-        adapter = PostAdapater(recyclerViewOptions)
+        adapter = PostAdapter(recyclerViewOptions)
 
         postRecyclerView.adapter = adapter
         postRecyclerView.layoutManager = LinearLayoutManager(context)

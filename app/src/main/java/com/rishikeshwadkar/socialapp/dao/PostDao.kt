@@ -24,10 +24,9 @@ class PostDao {
             val userDao = UserDao()
             val user = userDao.getUserById(currentUserId).await().toObject(User::class.java)!!
             val currentTime: Long = System.currentTimeMillis()
+
             val post = Post(text, currentTime, user)
             postCollection.document().set(post)
         }
-
     }
-
 }
