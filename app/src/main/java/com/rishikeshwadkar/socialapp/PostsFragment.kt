@@ -9,13 +9,15 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.dao.PostDao
 import com.rishikeshwadkar.socialapp.models.Post
 import kotlinx.android.synthetic.main.fragment_posts.*
 
-class PostsFragment : Fragment() {
+class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private lateinit var adapter: PostAdapter
     private lateinit var postDao: PostDao
@@ -47,7 +49,7 @@ class PostsFragment : Fragment() {
         val postCollection = postDao.postCollection
         val query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
         val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
-        adapter = PostAdapter(recyclerViewOptions)
+        adapter = PostAdapter(recyclerViewOptions,this)
 
         postRecyclerView.adapter = adapter
         postRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -65,5 +67,9 @@ class PostsFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+    }
+
+    override fun likeButtonListener(postID: String) {
+        postDao.updateLike(postID)
     }
 }

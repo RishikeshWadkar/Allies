@@ -15,7 +15,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:hint="Write Something!!"
+        android:hint="Write Something"
         app:counterEnabled="true"
         app:counterMaxLength="280"
         app:helperText="*Required"
@@ -28,9 +28,12 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/addPostTextInputText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
+            android:gravity="top"
+            android:inputType="text"
             android:maxLength="280"
-            android:inputType="text" />
+            android:singleLine="false"
+            android:maxLines="5"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

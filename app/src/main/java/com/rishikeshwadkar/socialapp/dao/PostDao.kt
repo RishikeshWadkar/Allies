@@ -3,6 +3,7 @@ package com.rishikeshwadkar.socialapp.dao
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -27,6 +28,27 @@ class PostDao {
 
             val post = Post(text, currentTime, user)
             postCollection.document().set(post)
+        }
+    }
+
+    private fun getPostByID(postID: String): Task<DocumentSnapshot>{
+        return postCollection.document(postID).get()
+    }
+
+    fun updateLike(postID: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            val currentUser = auth.currentUser!!.uid
+            val post = getPostByID(postID).await().toObject(Post::class.java)
+            val liked = post?.likedBy?.contains(currentUser)
+
+            if(liked!!){
+                post.likedBy.remove(currentUser)
+            }
+            else{
+                post.likedBy.add(currentUser)
+            }
+
+            postCollection.document(postID).update("likedBy",post.likedBy)
         }
     }
 }
