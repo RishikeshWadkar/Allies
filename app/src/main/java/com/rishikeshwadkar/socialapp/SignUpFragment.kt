@@ -117,7 +117,7 @@ class SignUpFragment : Fragment() {
                                                 snackbar.setTextColor(Color.WHITE)
                                                 snackbar.setActionTextColor(Color.parseColor("#FFBB86FC"))
                                                 snackbar.show()
-                                                
+
                                             }
                                             else if(it1 == "The email address is badly formatted."){
                                                 sign_up_email_text.requestFocus()
