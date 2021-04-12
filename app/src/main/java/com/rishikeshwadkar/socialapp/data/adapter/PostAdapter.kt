@@ -1,6 +1,5 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.data.adapter
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,11 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.rishikeshwadkar.socialapp.dao.PostDao
-import com.rishikeshwadkar.socialapp.dao.UserDao
-import com.rishikeshwadkar.socialapp.models.Post
-import com.rishikeshwadkar.socialapp.models.User
+import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.Utils
+import com.rishikeshwadkar.socialapp.data.dao.UserDao
+import com.rishikeshwadkar.socialapp.data.models.Post
+import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.item_view.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import com.rishikeshwadkar.socialapp.R
 import kotlinx.android.synthetic.main.fragment_choose.*
 
 class ChooseFragment : Fragment() {

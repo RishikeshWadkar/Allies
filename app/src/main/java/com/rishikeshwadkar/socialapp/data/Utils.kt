@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.data
 
 class Utils {
     companion object {

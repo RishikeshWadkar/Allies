@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp.models
+package com.rishikeshwadkar.socialapp.data.models
 
 data class User(
         val uid : String = "",

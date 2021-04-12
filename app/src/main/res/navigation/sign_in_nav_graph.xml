@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signinFragment"
-        android:name="com.rishikeshwadkar.socialapp.SigninFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.SigninFragment"
         android:label="fragment_signin"
         tools:layout="@layout/fragment_signin" >
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.rishikeshwadkar.socialapp.SignUpFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseFragment"
-        android:name="com.rishikeshwadkar.socialapp.ChooseFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.ChooseFragment"
         android:label="fragment_choose"
         tools:layout="@layout/fragment_choose" >
         <action

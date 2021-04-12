@@ -1,16 +1,14 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.navigation.Navigation
-import com.google.android.material.textfield.TextInputEditText
-import com.rishikeshwadkar.socialapp.dao.PostDao
+import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import kotlinx.android.synthetic.main.fragment_add_post.*
 
 class AddPostFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
-import com.rishikeshwadkar.socialapp.dao.PostDao
-import com.rishikeshwadkar.socialapp.models.Post
+import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.dao.PostDao
+import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
+import com.rishikeshwadkar.socialapp.data.models.Post
 import kotlinx.android.synthetic.main.fragment_posts.*
 
 class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
@@ -57,6 +57,8 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
         val dividerItemDecoration = DividerItemDecoration(postRecyclerView.context,
                 (postRecyclerView.layoutManager as LinearLayoutManager).orientation)
         postRecyclerView.addItemDecoration(dividerItemDecoration)
+
+
     }
 
     override fun onStart() {

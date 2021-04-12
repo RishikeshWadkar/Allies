@@ -1,14 +1,12 @@
-package com.rishikeshwadkar.socialapp.dao
+package com.rishikeshwadkar.socialapp.data.dao
 
-import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.rishikeshwadkar.socialapp.models.Post
-import com.rishikeshwadkar.socialapp.models.User
+import com.rishikeshwadkar.socialapp.data.models.Post
+import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
