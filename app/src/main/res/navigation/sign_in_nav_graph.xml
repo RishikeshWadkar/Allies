@@ -17,6 +17,9 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_signinFragment_to_setupPassword"
+            app:destination="@id/setupPassword" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -26,6 +29,9 @@
         <action
             android:id="@+id/action_signUpFragment_to_signinFragment"
             app:destination="@id/signinFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_setupPassword"
+            app:destination="@id/setupPassword" />
     </fragment>
     <fragment
         android:id="@+id/chooseFragment"
@@ -47,4 +53,9 @@
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
     </fragment>
+    <fragment
+        android:id="@+id/setupPassword"
+        android:name="com.rishikeshwadkar.socialapp.fragments.SetupPassword"
+        android:label="fragment_setup_password"
+        tools:layout="@layout/fragment_setup_password" />
 </navigation>

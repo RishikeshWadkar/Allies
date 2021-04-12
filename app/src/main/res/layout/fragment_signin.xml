@@ -6,6 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SigninFragment">
 
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <Button
+        android:id="@+id/sign_in_login_button"
+        android:layout_width="170sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
+        android:text="LOGIN"
+        android:textSize="18sp"
+        app:backgroundTint="@color/light_blue"
+        app:layout_constraintBottom_toTopOf="@+id/sign_in_forgot_password"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_password" />
+
     <ImageView
         android:id="@+id/sign_in_back"
         android:layout_width="30dp"
@@ -15,18 +38,6 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back" />
-
-    <TextView
-        android:id="@+id/sign_in_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/museo700"
-        android:text="Welcome !"
-        android:textColor="@color/dark_blue"
-        android:textSize="40sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_back" />
 
     <TextView
         android:id="@+id/sign_in_below_welcome"
@@ -39,13 +50,17 @@
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/sign_in_welcome" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+    <TextView
+        android:id="@+id/sign_in_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/museo700"
+        android:text="Welcome !"
+        android:textColor="@color/dark_blue"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/sign_in_back" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/sign_in_email_address"
@@ -72,7 +87,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/sign_in_password"
@@ -101,21 +115,6 @@
             android:fontFamily="sans-serif"
             android:password="true" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/sign_in_login_button"
-        android:layout_width="170sp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif"
-        android:text="LOGIN"
-        android:textSize="18sp"
-        app:backgroundTint="@color/light_blue"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in_forgot_password"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_password" />
 
     <TextView
         android:id="@+id/sign_in_forgot_password"

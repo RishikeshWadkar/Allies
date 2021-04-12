@@ -1,5 +1,6 @@
 package com.rishikeshwadkar.socialapp.data.dao
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -7,6 +8,7 @@ import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class UserDao {
 
@@ -18,6 +20,13 @@ class UserDao {
             GlobalScope.launch(Dispatchers.IO) {
                 userCollection.document(user.uid).set(it)
             }
+        }
+    }
+
+    fun updatePassword(uId: String, pass: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            userCollection.document(uId).update("userPassword", pass)
+            Log.d("confirm", "userDao password updated!!!")
         }
     }
 

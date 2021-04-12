@@ -95,7 +95,7 @@ class SignUpFragment : Fragment() {
                                 .addOnCompleteListener {
                                     if(it.isSuccessful){
                                         Log.d("main", it.result?.user!!.uid)
-                                        mViewModel.updateUIEmail(it.result?.user!!.uid,name.toString(),emailID.toString(),phoneNo.toString(),pass.toString(), requireContext())
+                                        mViewModel.updateUIEmail(it.result?.user!!.uid,name.toString(),emailID.toString(),phoneNo.toString(),pass.toString(),"", requireContext())
                                     }
                                     else{
                                         it.exception?.message?.let { it1 -> Log.d("main", it1)

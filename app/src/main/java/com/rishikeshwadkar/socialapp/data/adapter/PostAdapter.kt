@@ -33,11 +33,15 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, val listener: IPostAd
         val userPost: TextView = itemView.userPostText
         val userPostLikedOrNot: ImageView = itemView.userImageLikedOrNot
         val userLikeCount: TextView = itemView.userPostLikeCount
+        val userItemView: View = itemView.userItemView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val viewHolder = PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false))
         viewHolder.userPostLikedOrNot.setOnClickListener {
+            listener.likeButtonListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+        }
+        viewHolder.userLikeCount.setOnClickListener{
             listener.likeButtonListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
         }
         return viewHolder

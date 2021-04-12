@@ -1,6 +1,7 @@
 package com.rishikeshwadkar.socialapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,10 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
@@ -58,7 +61,12 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
                 (postRecyclerView.layoutManager as LinearLayoutManager).orientation)
         postRecyclerView.addItemDecoration(dividerItemDecoration)
 
-
+//        val currentUser = Firebase.auth.currentUser
+//        Log.d("pass", "pass -> ${currentUser!!.displayName}")
+//        if(currentUser!!.displayName == "R1SH1"){
+//            currentUser.updatePassword("12345678")
+//            Log.d("pass", "updated!!!!")
+//        }
     }
 
     override fun onStart() {
