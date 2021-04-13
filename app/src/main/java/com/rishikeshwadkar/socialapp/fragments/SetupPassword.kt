@@ -1,5 +1,7 @@
 package com.rishikeshwadkar.socialapp.fragments
 
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.hardware.usb.UsbRequest
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.widget.addTextChangedListener
@@ -33,35 +36,46 @@ class SetupPassword : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val currentUser = Firebase.auth.currentUser
         val password = confirm_enter_pass_text.text
+        val confirmPassword = confirm_confirm_pass_text.text
 
         confirm_enter_pass_text.addTextChangedListener {
-            if(confirm_enter_pass_text.length() < 8)
-                confirm_enter_pass.boxStrokeColor.red
+            if(confirm_enter_pass_text.length() < 8){
+                confirm_enter_pass.boxStrokeColor = Color.RED
+            }
+            else{
+                confirm_enter_pass.boxStrokeColor = Color.GREEN
+                confirm_enter_pass.setEndIconDrawable(R.drawable.ic_check)
+            }
         }
         confirm_confirm_pass_text.addTextChangedListener {
-            if(confirm_confirm_pass_text.text != confirm_enter_pass_text.text){
-                confirm_enter_pass.boxStrokeColor.green
-                confirm_confirm_pass.boxStrokeColor.red
-            }
+            if(password.toString() != confirmPassword.toString())
+                confirm_confirm_pass.boxStrokeColor = Color.RED
             else
-                confirm_confirm_pass.boxStrokeColor.red
+                confirm_confirm_pass.boxStrokeColor = Color.GREEN
         }
 
         confirm_submit_button.setOnClickListener {
-            Log.d("confirm", "clicked")
-            currentUser!!.updatePassword(password.toString())
-            Log.d("confirm", "${currentUser.displayName}")
-            mViewModel.updateUIEmail(
-                currentUser.uid,
-                currentUser.displayName!!,
-                currentUser.email!!,
-                currentUser.phoneNumber.toString(),
-                password.toString(),
-                currentUser.photoUrl.toString(),
-                requireContext()
-            )
+            if( (confirm_enter_pass_text.length() < 8) || (password.toString() != confirmPassword.toString())){
+                if(confirm_enter_pass.boxStrokeColor == Color.RED)
+                    confirm_enter_pass.requestFocus()
+                else
+                    confirm_confirm_pass.requestFocus()
+            }
+            else{
+                Log.d("confirm", "clicked")
+                currentUser!!.updatePassword(password.toString())
+                Log.d("confirm", "${currentUser.displayName}")
+                mViewModel.updateUIEmail(
+                        currentUser.uid,
+                        currentUser.displayName!!,
+                        currentUser.email!!,
+                        currentUser.phoneNumber.toString(),
+                        password.toString(),
+                        currentUser.photoUrl.toString(),
+                        requireContext()
+                )
+            }
+
         }
-
-
     }
 }

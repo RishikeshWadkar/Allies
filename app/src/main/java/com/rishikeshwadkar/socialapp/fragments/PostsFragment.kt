@@ -57,16 +57,9 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
         postRecyclerView.adapter = adapter
         postRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        val dividerItemDecoration = DividerItemDecoration(postRecyclerView.context,
-                (postRecyclerView.layoutManager as LinearLayoutManager).orientation)
-        postRecyclerView.addItemDecoration(dividerItemDecoration)
-
-//        val currentUser = Firebase.auth.currentUser
-//        Log.d("pass", "pass -> ${currentUser!!.displayName}")
-//        if(currentUser!!.displayName == "R1SH1"){
-//            currentUser.updatePassword("12345678")
-//            Log.d("pass", "updated!!!!")
-//        }
+//        val dividerItemDecoration = DividerItemDecoration(postRecyclerView.context,
+//                (postRecyclerView.layoutManager as LinearLayoutManager).orientation)
+//        postRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onStart() {

@@ -128,6 +128,8 @@ class SigninFragment : Fragment() {
             withContext(Dispatchers.Main){
                 if(user == null)
                     Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
+                else if(user.userPassword == "")
+                    Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
                 else
                     mViewModel.updateUI(auth.currentUser, requireContext())
             }

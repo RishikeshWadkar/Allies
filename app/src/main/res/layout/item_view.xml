@@ -5,6 +5,8 @@
     android:id="@+id/userItemView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/item_view_background"
     android:paddingBottom="20dp">
 
     <ImageView
