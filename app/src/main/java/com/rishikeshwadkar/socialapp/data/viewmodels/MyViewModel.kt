@@ -1,10 +1,13 @@
 package com.rishikeshwadkar.socialapp.data.viewmodels
 
 import android.app.Application
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
@@ -32,6 +35,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
     val userDao: UserDao = UserDao()
     val currentUser = Firebase.auth.currentUser
+    lateinit var dialog: ProgressDialog
 
     fun updateUI(firebaseUser: FirebaseUser?, context: Context): Boolean {
         if(firebaseUser != null){
@@ -82,4 +86,16 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         context.startActivity(intent)
     }
 
+    fun showDialog(context: Context){
+        dialog = ProgressDialog(context)
+        dialog.setMessage("Authenticating with Google")
+        dialog.setCancelable(false)
+        dialog.show()
+        val progressbar = dialog.findViewById<ProgressBar>(android.R.id.progress)
+        progressbar.indeterminateDrawable.setColorFilter(Color.parseColor("#2A00D7"), android.graphics.PorterDuff.Mode.SRC_IN);
+    }
+
+    fun dismissDialog(){
+        dialog.dismiss()
+    }
 }

@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ChooseFragment">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView2"
+        android:layout_width="300sp"
+        android:layout_height="300sp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_allies_logo" />
+
     <ImageView
         android:id="@+id/welcome_allies_logo"
         android:layout_width="136dp"
@@ -21,14 +30,16 @@
         android:id="@+id/welcome_hello_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:fontFamily="@font/museo1000"
         android:text="Hello !"
         android:textColor="#000000"
         android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_bellow_hi"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView2"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/welcome_bellow_hi"
@@ -37,7 +48,9 @@
         android:fontFamily="@font/museo500"
         android:text="Welcome to allies"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_login_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_hello_tv" />
 
@@ -50,7 +63,9 @@
         android:text="LOGIN"
         android:textSize="18sp"
         app:backgroundTint="@color/light_blue"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_signup_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_bellow_hi" />
 
@@ -61,26 +76,16 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/signup_bg"
         android:fontFamily="sans-serif"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="SIGNUP"
         android:textColor="@color/light_blue"
         android:textSize="18sp"
         app:backgroundTint="@null"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_login_btn" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:src="@drawable/undraw_develop_app_re_bi4i"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_allies_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

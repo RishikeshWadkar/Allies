@@ -68,12 +68,16 @@ class SignUpFragment : Fragment() {
 
         sign_up_google_login.setOnClickListener {
             Log.i("myTag","Button Clicked")
+            mViewModel.showDialog(requireContext())
             signIn()
-            progressBar.visibility = View.VISIBLE
         }
 
         sign_up_button.setOnClickListener {
             loginUsingEmailAndPassword()
+        }
+
+        sign_up_sign_in_textview.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_signUpFragment_to_signinFragment)
         }
     }
 
@@ -160,42 +164,30 @@ class SignUpFragment : Fragment() {
         } catch (e: ApiException) {
             // Google Sign In failed, update UI appropriately
             Log.w(TAG, "Google sign in failed", e)
-            progressBar.visibility = View.GONE
+            mViewModel.dismissDialog()
         }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        Log.i("myTag","FirebaseAuthWithGoogle")
+        Log.i("myTag", "FirebaseAuthWithGoogle")
 
-        GlobalScope.launch (Dispatchers.IO){
+        GlobalScope.launch(Dispatchers.IO){
             auth.signInWithCredential(credential).await()
-            currentUser = Firebase.auth.currentUser
-            if(currentUser != null){
-                Log.d("userVerify", "currentUser is not null")
-                GlobalScope.launch(Dispatchers.IO) {
-                    user = userDao.getUserById(currentUser!!.uid).await().toObject(com.rishikeshwadkar.socialapp.data.models.User::class.java)
-                    Log.d("userVerify", "entered coroutine")
-                    withContext(Dispatchers.Main){
-                        if(user == null){
-                            Log.d("userVerify", "mokla $user")
-                            Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_setupPassword)
-                        }
-                        else if(user!!.userPassword.isNotEmpty()){
-                            Log.d("userVerify", user!!.userPassword)
-                            updateUI()
-                        }
-                        else
-                            Log.d("userVerify", "$user")
-                    }
+            val user = userDao.getUserById(auth.currentUser!!.uid).await().toObject(User::class.java)
+            withContext(Dispatchers.Main){
+                if(user == null){
+                    mViewModel.dismissDialog()
+                    Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
                 }
-            }else
-                Log.d("userVerify", "currentUser is null")
+                else if(user.userPassword == ""){
+                    mViewModel.dismissDialog()
+                    Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
+                }
+                else
+                    mViewModel.updateUI(auth.currentUser, requireContext())
+            }
         }
-    }
-
-    private fun updateUI(){
-        mViewModel.updateUI(currentUser, requireContext())
     }
 }
 
