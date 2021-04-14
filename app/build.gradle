@@ -49,10 +49,7 @@ dependencies {
     /* coroutines support for firebase operations */
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
-
-
     implementation 'androidx.multidex:multidex:2.0.1'
-
 
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:26.1.0')
@@ -76,4 +73,7 @@ dependencies {
     })
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
 
+
+    //Lottie animations
+    implementation "com.airbnb.android:lottie:3.7.0"
 }

@@ -49,7 +49,7 @@ class SignInActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main){
                     if(user == null){
                         Log.d("userVerify", "mokla $user")
-                        // add splash screen to setup password
+
                     }
                     else if(user!!.userPassword.isNotEmpty()){
                         Log.d("userVerify", user!!.userPassword)

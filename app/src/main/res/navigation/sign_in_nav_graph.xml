@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sign_in_nav_graph"
-    app:startDestination="@id/chooseFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/signinFragment"
@@ -61,4 +61,18 @@
         android:name="com.rishikeshwadkar.socialapp.fragments.SetupPassword"
         android:label="fragment_setup_password"
         tools:layout="@layout/fragment_setup_password" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.rishikeshwadkar.socialapp.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen" >
+        <action
+            android:id="@+id/action_splashScreenFragment_to_chooseFragment"
+            app:destination="@id/chooseFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

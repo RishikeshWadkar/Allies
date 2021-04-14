@@ -43,6 +43,9 @@ class SignUpFragment : Fragment() {
     private var TAG: String = "SignInActivity TAG"
     private lateinit var auth: FirebaseAuth
     private val mViewModel: MyViewModel by viewModels()
+    val userDao = UserDao()
+    var user: com.rishikeshwadkar.socialapp.data.models.User? = com.rishikeshwadkar.socialapp.data.models.User()
+    private var currentUser = Firebase.auth.currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -166,11 +169,34 @@ class SignUpFragment : Fragment() {
         Log.i("myTag","FirebaseAuthWithGoogle")
 
         GlobalScope.launch (Dispatchers.IO){
-            val auth = auth.signInWithCredential(credential).await()
-            val firebaseUser = auth.user
-            withContext(Dispatchers.Main){
-                mViewModel.updateUI(firebaseUser,requireContext())
-            }
+            auth.signInWithCredential(credential).await()
+            currentUser = Firebase.auth.currentUser
+            if(currentUser != null){
+                Log.d("userVerify", "currentUser is not null")
+                GlobalScope.launch(Dispatchers.IO) {
+                    user = userDao.getUserById(currentUser!!.uid).await().toObject(com.rishikeshwadkar.socialapp.data.models.User::class.java)
+                    Log.d("userVerify", "entered coroutine")
+                    withContext(Dispatchers.Main){
+                        if(user == null){
+                            Log.d("userVerify", "mokla $user")
+                            Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_setupPassword)
+                        }
+                        else if(user!!.userPassword.isNotEmpty()){
+                            Log.d("userVerify", user!!.userPassword)
+                            updateUI()
+                        }
+                        else
+                            Log.d("userVerify", "$user")
+                    }
+                }
+            }else
+                Log.d("userVerify", "currentUser is null")
         }
     }
+
+    private fun updateUI(){
+        mViewModel.updateUI(currentUser, requireContext())
+    }
 }
+
+
