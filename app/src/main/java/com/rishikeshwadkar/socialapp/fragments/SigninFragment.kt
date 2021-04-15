@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -38,7 +39,6 @@ class SigninFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val mViewModel: MyViewModel by viewModels()
     private val userDao: UserDao  = UserDao()
-    //lateinit var dialog: ProgressDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,7 +59,6 @@ class SigninFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         auth = Firebase.auth
 
-        //dialog = ProgressDialog(requireContext())
 
         sign_in_login_button.setOnClickListener {
             performSignIN()
@@ -67,7 +66,6 @@ class SigninFragment : Fragment() {
 
         sign_in_google_login.setOnClickListener {
             mViewModel.showDialog(requireContext())
-            //showDialog()
             signIn()
         }
 
@@ -135,6 +133,9 @@ class SigninFragment : Fragment() {
             // Google Sign In failed, update UI appropriately
             Log.w("signINwithGoogle", "Google sign in failed", e)
             mViewModel.dismissDialog()
+            Snackbar.make(sign_in_constraint_layout, "Something went wrong!", Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null)
+                    .show()
         }
     }
 

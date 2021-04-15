@@ -30,6 +30,7 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import kotlinx.android.synthetic.main.fragment_signin.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -165,6 +166,9 @@ class SignUpFragment : Fragment() {
             // Google Sign In failed, update UI appropriately
             Log.w(TAG, "Google sign in failed", e)
             mViewModel.dismissDialog()
+            Snackbar.make(signUpConstraintLayout, "Something went wrong!", Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null)
+                    .show()
         }
     }
 
@@ -178,11 +182,11 @@ class SignUpFragment : Fragment() {
             withContext(Dispatchers.Main){
                 if(user == null){
                     mViewModel.dismissDialog()
-                    Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
+                    Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_setupPassword)
                 }
                 else if(user.userPassword == ""){
                     mViewModel.dismissDialog()
-                    Navigation.findNavController(requireView()).navigate(R.id.action_signinFragment_to_setupPassword)
+                    Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_setupPassword)
                 }
                 else
                     mViewModel.updateUI(auth.currentUser, requireContext())

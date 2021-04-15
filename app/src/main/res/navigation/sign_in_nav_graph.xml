@@ -44,17 +44,23 @@
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
+            app:popExitAnim="@anim/to_right"
+            app:popUpTo="@id/chooseFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_chooseFragment_to_signUpFragment"
             app:destination="@id/signUpFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
+            app:popExitAnim="@anim/to_right"
+            app:popUpTo="@id/chooseFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_chooseFragment_to_setupPassword"
-            app:destination="@id/setupPassword" />
+            app:destination="@id/setupPassword"
+            app:popUpTo="@id/chooseFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/setupPassword"
@@ -73,6 +79,7 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

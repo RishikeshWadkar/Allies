@@ -65,6 +65,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun updateUI(){
+
         mViewModel.updateUI(currentUser, this)
     }
 
