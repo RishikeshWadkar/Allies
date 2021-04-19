@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Posts"
+        android:id="@+id/postsFragment"
+        android:icon="@drawable/bottom_navigation_selector_post"/>
+    <item android:title="Profile"
+        android:id="@+id/myProfileFragment"
+        android:icon="@drawable/bottom_navigation_selector_profile"/>
+</menu>

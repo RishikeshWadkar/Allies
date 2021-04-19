@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#330055FF"
     tools:context=".fragments.PostsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -27,7 +26,7 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:contentDescription="TODO"
-        app:backgroundTint="@color/purple_200"
+        app:backgroundTint="@color/light_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="#FFFFFF"

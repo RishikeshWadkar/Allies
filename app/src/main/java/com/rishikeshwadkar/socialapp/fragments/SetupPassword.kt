@@ -48,14 +48,14 @@ class SetupPassword : Fragment() {
             }
         }
         confirm_confirm_pass_text.addTextChangedListener {
-            if(password.toString() != confirmPassword.toString())
+            if(confirm_enter_pass_text.text.toString() != confirm_confirm_pass_text.text.toString())
                 confirm_confirm_pass.boxStrokeColor = Color.RED
             else
                 confirm_confirm_pass.boxStrokeColor = Color.GREEN
         }
 
         confirm_submit_button.setOnClickListener {
-            if( (confirm_enter_pass_text.length() < 8) || (password.toString() != confirmPassword.toString())){
+            if( (confirm_enter_pass_text.length() < 8) || (confirm_enter_pass_text.text.toString() != confirm_confirm_pass_text.text.toString())){
                 if(confirm_enter_pass.boxStrokeColor == Color.RED)
                     confirm_enter_pass.requestFocus()
                 else

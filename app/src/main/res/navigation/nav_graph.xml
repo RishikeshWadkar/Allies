@@ -17,6 +17,13 @@
             app:exitAnim="@anim/from_screen_to_top"
             app:popEnterAnim="@anim/frop_top_to_screen"
             app:popExitAnim="@anim/frop_top_to_down" />
+        <action
+            android:id="@+id/action_postsFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"
@@ -28,5 +35,18 @@
             app:destination="@id/postsFragment"
             app:popUpTo="@id/postsFragment"
             app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProfileFragment"
+        android:name="com.rishikeshwadkar.socialapp.MyProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile" >
+        <action
+            android:id="@+id/action_myProfileFragment_to_postsFragment"
+            app:destination="@id/postsFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
     </fragment>
 </navigation>
