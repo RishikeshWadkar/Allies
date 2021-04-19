@@ -60,8 +60,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
@@ -73,7 +71,11 @@ dependencies {
     })
     androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"
 
-
     //Lottie animations
     implementation "com.airbnb.android:lottie:3.7.0"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
+
 }

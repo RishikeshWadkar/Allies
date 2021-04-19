@@ -20,8 +20,6 @@
         <action
             android:id="@+id/action_postsFragment_to_myProfileFragment"
             app:destination="@id/myProfileFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
     </fragment>
@@ -43,10 +41,6 @@
         tools:layout="@layout/fragment_my_profile" >
         <action
             android:id="@+id/action_myProfileFragment_to_postsFragment"
-            app:destination="@id/postsFragment"
-            app:enterAnim="@anim/from_left"
-            app:exitAnim="@anim/to_right"
-            app:popEnterAnim="@anim/from_right"
-            app:popExitAnim="@anim/to_left" />
+            app:destination="@id/postsFragment" />
     </fragment>
 </navigation>
