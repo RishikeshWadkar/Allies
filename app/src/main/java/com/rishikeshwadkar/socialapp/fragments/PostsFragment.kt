@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,11 +20,16 @@ import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.models.Post
 import kotlinx.android.synthetic.main.fragment_posts.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private lateinit var adapter: PostAdapter
     private lateinit var postDao: PostDao
+    private lateinit var query: Query
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +45,6 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        floatingActionButton.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_postsFragment_to_addPostFragment)
-        }
         setUpRecyclerView()
         val db = FirebaseFirestore.getInstance()
     }
@@ -50,16 +52,13 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     private fun setUpRecyclerView() {
         postDao = PostDao()
         val postCollection = postDao.postCollection
-        val query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
-        val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
-        adapter = PostAdapter(recyclerViewOptions,this)
 
+        query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
+        val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
+
+        adapter = PostAdapter(recyclerViewOptions,this)
         postRecyclerView.adapter = adapter
         postRecyclerView.layoutManager = LinearLayoutManager(context)
-
-//        val dividerItemDecoration = DividerItemDecoration(postRecyclerView.context,
-//                (postRecyclerView.layoutManager as LinearLayoutManager).orientation)
-//        postRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onStart() {
@@ -69,7 +68,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onStop() {
         super.onStop()
-        adapter.stopListening()
+       adapter.stopListening()
     }
 
     override fun likeButtonListener(postID: String) {

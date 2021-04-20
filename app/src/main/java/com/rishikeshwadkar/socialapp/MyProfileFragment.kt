@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.fragment_my_profile.view.*
 
 class MyProfileFragment : Fragment() {
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

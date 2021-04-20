@@ -5,12 +5,16 @@
         android:id="@+id/postsFragment"
         android:icon="@drawable/bottom_navigation_selector_post"
         android:title="Posts" />
+
     <item
-        android:id="@+id/chat"
         android:icon="@drawable/bottom_navigation_selector_profile"
         android:title="chat" />
+
+    <item android:title="Add Post"
+        android:id="@+id/addPostFragment"
+        android:icon="@drawable/bottom_navigation_selector_add_post"/>
+
     <item
-        android:id="@+id/allies"
         android:icon="@drawable/bottom_navigation_selector_profile"
         android:title="Allies" />
     <item
