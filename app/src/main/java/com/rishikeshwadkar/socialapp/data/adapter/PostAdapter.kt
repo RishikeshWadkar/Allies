@@ -28,7 +28,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class PostAdapter(options: FirestoreRecyclerOptions<Post>, val listener: IPostAdapter) : FirestoreRecyclerAdapter<Post, PostAdapter.PostViewHolder>(options) {
+class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener: IPostAdapter) : FirestoreRecyclerAdapter<Post, PostAdapter.PostViewHolder>(options) {
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val userName: TextView = itemView.userName
@@ -43,10 +43,14 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, val listener: IPostAd
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val viewHolder = PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_view, parent, false))
         viewHolder.userPostLikedOrNot.setOnClickListener {
+            Log.d("mQuery", "clicked")
             listener.likeButtonListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
         }
         viewHolder.userLikeCount.setOnClickListener{
             listener.likeButtonListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+        }
+        viewHolder.userImageView.setOnClickListener{
+
         }
         return viewHolder
     }
@@ -64,10 +68,13 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, val listener: IPostAd
         val isLiked = model.likedBy.contains(currentUser)
 
         if(isLiked){
+            Log.d("mQuery", "post is liked - clicked")
             holder.userPostLikedOrNot.setImageResource(R.drawable.ic_liked)
         }
-        else
+        else{
+            Log.d("mQuery", "post is not liked - clicked")
             holder.userPostLikedOrNot.setImageResource(R.drawable.ic_unliked)
+        }
     }
 
     private fun updateFireStoreData(model: Post){

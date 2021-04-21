@@ -69,7 +69,7 @@
         tools:layout="@layout/fragment_setup_password" />
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.rishikeshwadkar.socialapp.SplashScreenFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action

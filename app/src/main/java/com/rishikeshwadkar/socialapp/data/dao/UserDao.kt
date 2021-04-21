@@ -30,6 +30,13 @@ class UserDao {
         }
     }
 
+    fun updatePostCount(uid: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
+            userCollection.document(uid).update("userPostCount",user.userPostCount + 1)
+        }
+    }
+
     fun getUserById(uId: String): Task<DocumentSnapshot> {
         return userCollection.document(uId).get()
     }

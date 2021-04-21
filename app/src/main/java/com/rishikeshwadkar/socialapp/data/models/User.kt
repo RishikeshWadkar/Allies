@@ -6,6 +6,7 @@ data class User(
         val userImage : String = "",
         val userEmail : String = "",
         val userPhoneNo : String = "",
-        val userPassword : String = ""
+        val userPassword : String = "",
+        val userPostCount : Int = 0
 )
 

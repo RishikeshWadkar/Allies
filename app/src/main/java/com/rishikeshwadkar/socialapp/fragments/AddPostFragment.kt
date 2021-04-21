@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
+import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import kotlinx.android.synthetic.main.fragment_add_post.*
 
 class AddPostFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+
+    private val userDao: UserDao = UserDao()
+    private val postDao = PostDao()
+    private val currentUser = Firebase.auth.currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +32,6 @@ class AddPostFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val navigation = Navigation.findNavController(view)
-        val postDao = PostDao()
         val input = addPostTextInputText.text
 
         submitPostbtn.setOnClickListener {
@@ -36,6 +39,7 @@ class AddPostFragment : Fragment() {
                 Log.i("AddPost", "Post Added")
                 Log.i("AddPost", input.toString())
                 postDao.addPost(input.toString())
+                userDao.updatePostCount(currentUser!!.uid)
                 navigation.navigate(R.id.action_addPostFragment_to_postsFragment)
             }
             else

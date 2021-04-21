@@ -28,8 +28,9 @@ import kotlinx.coroutines.withContext
 class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private lateinit var adapter: PostAdapter
-    private lateinit var postDao: PostDao
+    private var postDao: PostDao = PostDao()
     private lateinit var query: Query
+    private val postCollection = postDao.postCollection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +47,25 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerView()
-        val db = FirebaseFirestore.getInstance()
     }
 
     private fun setUpRecyclerView() {
-        postDao = PostDao()
-        val postCollection = postDao.postCollection
-
-        query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
-        val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
-
-        adapter = PostAdapter(recyclerViewOptions,this)
-        postRecyclerView.adapter = adapter
-        postRecyclerView.layoutManager = LinearLayoutManager(context)
+        val mThis = this
+        GlobalScope.launch(Dispatchers.IO) {
+            query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
+            val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
+            withContext(Dispatchers.Main){
+                adapter = PostAdapter(recyclerViewOptions,mThis)
+                postRecyclerView.adapter = adapter
+                postRecyclerView.layoutManager = LinearLayoutManager(context)
+                adapter.startListening()
+            }
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        adapter.startListening()
+
     }
 
     override fun onStop() {
