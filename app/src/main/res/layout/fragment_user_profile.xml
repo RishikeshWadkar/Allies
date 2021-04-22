@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/my_profile_image_view"
+        android:id="@+id/user_profile_image_view"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
@@ -19,7 +19,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/my_profile_user_name"
+        android:id="@+id/user_profile_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -29,93 +29,88 @@
         android:gravity="center"
         android:textColor="#000000"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/my_profile_image_view"
+        app:layout_constraintEnd_toEndOf="@+id/user_profile_image_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profile_image_view"
-        tools:text="Rishikesh Wadkar" />
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_image_view" />
 
     <TextView
-        android:id="@+id/my_profile_post_tv"
+        android:id="@+id/user_profile_post_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Posts"
         android:textColor="#000000"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/my_profile_user_name"
-        app:layout_constraintEnd_toEndOf="@+id/my_profile_post_number_tv"
+        app:layout_constraintBottom_toBottomOf="@+id/user_profile_user_name"
+        app:layout_constraintEnd_toEndOf="@+id/user_profile_post_number_tv"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/my_profile_post_number_tv"
-        app:layout_constraintTop_toBottomOf="@+id/my_profile_post_number_tv"
-        tools:text="Posts" />
+        app:layout_constraintStart_toStartOf="@+id/user_profile_post_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_post_number_tv" />
 
     <TextView
-        android:id="@+id/my_profile_post_number_tv"
+        android:id="@+id/user_profile_post_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/my_profile_post_tv"
-        app:layout_constraintEnd_toStartOf="@+id/my_profile_allies_number_tv"
+        app:layout_constraintBottom_toTopOf="@+id/user_profile_post_tv"
+        app:layout_constraintEnd_toStartOf="@+id/user_profile_allies_number_tv"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/my_profile_image_view"
-        app:layout_constraintTop_toTopOf="@+id/my_profile_image_view"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_image_view"
+        app:layout_constraintTop_toTopOf="@+id/user_profile_image_view"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="18" />
+        tools:text="27" />
 
     <TextView
-        android:id="@+id/my_profile_allies_tv"
+        android:id="@+id/user_profile_allies_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Allies"
         android:textColor="#000000"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/my_profile_post_tv"
-        app:layout_constraintEnd_toEndOf="@+id/my_profile_allies_number_tv"
+        app:layout_constraintBottom_toBottomOf="@+id/user_profile_post_tv"
+        app:layout_constraintEnd_toEndOf="@+id/user_profile_allies_number_tv"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/my_profile_allies_number_tv"
-        app:layout_constraintTop_toBottomOf="@+id/my_profile_allies_number_tv"
-        tools:text="Allies" />
+        app:layout_constraintStart_toStartOf="@+id/user_profile_allies_number_tv"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_allies_number_tv" />
 
     <TextView
-        android:id="@+id/my_profile_allies_number_tv"
+        android:id="@+id/user_profile_allies_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/my_profile_allies_tv"
+        app:layout_constraintBottom_toTopOf="@+id/user_profile_allies_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/my_profile_post_number_tv"
-        app:layout_constraintTop_toTopOf="@+id/my_profile_post_number_tv"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="18" />
+        app:layout_constraintStart_toEndOf="@+id/user_profile_post_number_tv"
+        app:layout_constraintTop_toTopOf="@+id/user_profile_post_number_tv"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_profile_recycler_view"
+        android:id="@+id/user_profile_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_horizontal_line"
         tools:listitem="@layout/item_view" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/user_profile_horizontal_line"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profile_edit_profile_btn"
-        app:srcCompat="@drawable/horizontal_line_shape" />
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_add_to_allies_btn" />
 
     <TextView
-        android:id="@+id/my_profile_edit_profile_btn"
+        android:id="@+id/user_profile_add_to_allies_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -126,12 +121,12 @@
         android:background="@drawable/edit_profile_background"
         android:gravity="center"
         android:padding="3dp"
-        android:text="Edit Profile"
+        android:text="Add to Allies"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profile_user_name" />
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_user_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

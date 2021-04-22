@@ -1,16 +1,24 @@
 package com.rishikeshwadkar.socialapp.data.dao
 
+import android.util.Log
+import android.view.View
+import androidx.navigation.Navigation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
+import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
+import com.rishikeshwadkar.socialapp.fragments.PostsFragment
+import com.rishikeshwadkar.socialapp.fragments.PostsFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class PostDao {
     private val db = FirebaseFirestore.getInstance()
@@ -31,6 +39,22 @@ class PostDao {
 
     private fun getPostByID(postID: String): Task<DocumentSnapshot>{
         return postCollection.document(postID).get()
+    }
+
+    fun getUserUidByPostId(postId: String, view: View){
+        GlobalScope.launch(Dispatchers.IO) {
+            val post: Post = getPostByID(postId).await().toObject(Post::class.java)!!
+            withContext(Dispatchers.Main){
+                Log.d("gettingUid",post.createdBy.uid)
+                if(post.createdBy.uid == Firebase.auth.currentUser!!.uid)
+                    Navigation.findNavController(view).navigate(R.id.action_postsFragment_to_myProfileFragment)
+                else{
+                    val action = PostsFragmentDirections.actionPostsFragmentToUserProfileFragment(post.createdBy.uid)
+                    Navigation.findNavController(view).navigate(action)
+                }
+
+            }
+        }
     }
 
     fun updateLike(postID: String){

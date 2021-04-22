@@ -30,6 +30,18 @@ class UserDao {
         }
     }
 
+    fun updateName(uid: String, newName: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            userCollection.document(uid).update("userDisplayName",newName)
+        }
+    }
+
+    fun updatePhone(uid: String, phoneNo: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            userCollection.document(uid).update("userPhoneNo", phoneNo)
+        }
+    }
+
     fun updatePostCount(uid: String){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!

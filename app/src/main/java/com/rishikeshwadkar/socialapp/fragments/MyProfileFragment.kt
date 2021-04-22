@@ -1,12 +1,11 @@
 package com.rishikeshwadkar.socialapp.fragments
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -42,8 +41,12 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        my_proflie_recycler_view.setHasFixedSize(true)
+        my_profile_recycler_view.setHasFixedSize(true)
         setupRecyclerView()
+
+        my_profile_edit_profile_btn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_myProfileFragment_to_editProfileFragment)
+        }
     }
 
     private fun setupRecyclerView(){
@@ -61,8 +64,9 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     //Log.d("mQuery", recyclerViewOptions.snapshots.getSnapshot(0).id)
                     adapter = PostAdapter(recyclerViewOptions, mThis)
                     adapter!!.startListening()
-                    my_proflie_recycler_view.adapter = adapter
-                    my_proflie_recycler_view.layoutManager = LinearLayoutManager(context)
+                    my_profile_recycler_view.adapter = adapter
+                    my_profile_recycler_view.layoutManager = LinearLayoutManager(context)
+
                     // Recycler View Done
                     my_profile_user_name.text = currentUser.userDisplayName
                     val postsCount: Int = currentUser.userPostCount
@@ -73,6 +77,10 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun likeButtonListener(postID: String) {
         postDao.updateLike(postID)
+    }
+
+    override fun userImageClickListener(postID: String) {
+        TODO("Not yet implemented")
     }
 
 }

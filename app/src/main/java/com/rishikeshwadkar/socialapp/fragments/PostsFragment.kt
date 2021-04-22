@@ -31,10 +31,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     private var postDao: PostDao = PostDao()
     private lateinit var query: Query
     private val postCollection = postDao.postCollection
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    lateinit var mView: View
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +43,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mView = view
         setUpRecyclerView()
     }
 
@@ -63,17 +61,16 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     override fun onStop() {
-        super.onStop()
+       super.onStop()
        adapter.stopListening()
     }
 
     override fun likeButtonListener(postID: String) {
         postDao.updateLike(postID)
+    }
+
+    override fun userImageClickListener(postID: String) {
+        postDao.getUserUidByPostId(postID, mView)
     }
 }
