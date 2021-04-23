@@ -7,6 +7,7 @@ data class User(
         val userEmail : String = "",
         val userPhoneNo : String = "",
         val userPassword : String = "",
-        val userPostCount : Int = 0
+        val userPostCount : Int = 0,
+        val myAllies: ArrayList<String> = ArrayList()
 )
 

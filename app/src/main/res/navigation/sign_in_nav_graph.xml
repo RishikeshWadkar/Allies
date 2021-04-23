@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signinFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.SigninFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.authentication.SigninFragment"
         android:label="fragment_signin"
         tools:layout="@layout/fragment_signin" >
         <action
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.SignUpFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.authentication.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.ChooseFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.authentication.ChooseFragment"
         android:label="fragment_choose"
         tools:layout="@layout/fragment_choose" >
         <action
@@ -64,12 +64,12 @@
     </fragment>
     <fragment
         android:id="@+id/setupPassword"
-        android:name="com.rishikeshwadkar.socialapp.fragments.SetupPassword"
+        android:name="com.rishikeshwadkar.socialapp.fragments.authentication.SetupPassword"
         android:label="fragment_setup_password"
         tools:layout="@layout/fragment_setup_password" />
     <fragment
         android:id="@+id/splashScreenFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.SplashScreenFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.authentication.SplashScreenFragment"
         android:label="fragment_splash_screen"
         tools:layout="@layout/fragment_splash_screen" >
         <action

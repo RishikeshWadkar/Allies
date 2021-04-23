@@ -81,6 +81,7 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener:
         val db = FirebaseFirestore.getInstance()
         val userDao = UserDao()
         val postUserName = model.createdBy.userDisplayName
+        val postPhotoUrl: String = model.createdBy.userImage
 
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userDao.getUserById(model.createdBy.uid).await().toObject(User::class.java)!!
@@ -89,7 +90,6 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener:
             if(postUserName != user.userDisplayName) {
                 //Log.d(TAG, postUserName)
                 Log.d(tag, user.userDisplayName)
-
                 db.collection("posts").whereEqualTo("createdBy.userDisplayName", postUserName)
                         .whereEqualTo("currentTime", model.currentTime).get().addOnSuccessListener { documents ->
                             for (document in documents) {
@@ -100,6 +100,14 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener:
                         .addOnFailureListener { exception ->
                             Log.w(tag, "Error getting documents: ", exception)
                         }
+            }
+            else if(postPhotoUrl != user.userImage){
+                db.collection("posts").whereEqualTo("createdBy.uid", user.uid).get()
+                    .addOnSuccessListener {documents ->
+                        for (document in documents){
+                            db.collection("posts").document(document.id).update("createdBy.userImage", user.userImage)
+                        }
+                    }
             }
         }
 

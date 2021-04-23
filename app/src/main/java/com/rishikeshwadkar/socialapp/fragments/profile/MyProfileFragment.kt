@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -80,7 +80,7 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     }
 
     override fun userImageClickListener(postID: String) {
-        TODO("Not yet implemented")
+
     }
 
 }

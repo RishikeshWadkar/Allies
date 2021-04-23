@@ -1,14 +1,11 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.authentication
 
-import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -26,7 +23,6 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
-import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.fragment_signin.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -65,7 +61,7 @@ class SigninFragment : Fragment() {
         }
 
         sign_in_google_login.setOnClickListener {
-            mViewModel.showDialog(requireContext())
+            mViewModel.showDialog(requireContext(),"Authenticating with Google")
             signIn()
         }
 

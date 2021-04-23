@@ -42,6 +42,12 @@ class UserDao {
         }
     }
 
+    fun updatePhoto(uid: String, photoUrl: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            userCollection.document(uid).update("userImage", photoUrl)
+        }
+    }
+
     fun updatePostCount(uid: String){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
@@ -51,6 +57,15 @@ class UserDao {
 
     fun getUserById(uId: String): Task<DocumentSnapshot> {
         return userCollection.document(uId).get()
+    }
+
+    fun addToMyAllies(myUid: String, alliesUid: String){
+        val user: User = User()
+        user.myAllies.add(alliesUid)
+        GlobalScope.launch(Dispatchers.IO) {
+            userCollection.document(myUid).update("myAllies", user.myAllies)
+        }
+
     }
 
 }

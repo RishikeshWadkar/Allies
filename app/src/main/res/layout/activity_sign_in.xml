@@ -5,7 +5,7 @@
     android:id="@+id/constreaintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignInActivity">
+    tools:context=".activities.SignInActivity">
 
     <fragment
         android:id="@+id/sign_in_navHost"

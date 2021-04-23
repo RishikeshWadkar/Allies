@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/myProfileFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.MyProfileFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.profile.MyProfileFragment"
         android:label="fragment_my_profile"
         tools:layout="@layout/fragment_my_profile" >
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.rishikeshwadkar.socialapp.EditProfileFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.profile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" >
         <action
@@ -60,11 +60,16 @@
     </fragment>
     <fragment
         android:id="@+id/userProfileFragment"
-        android:name="com.rishikeshwadkar.socialapp.UserProfileFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.profile.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" >
         <argument
             android:name="uid"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.rishikeshwadkar.socialapp.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" />
 </navigation>

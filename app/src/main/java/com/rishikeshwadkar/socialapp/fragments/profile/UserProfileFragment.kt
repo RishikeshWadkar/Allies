@@ -1,22 +1,25 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavArgs
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
+import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
+import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,6 +33,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     private val userDao = UserDao()
     private val postDao: PostDao = PostDao()
     lateinit var mView: View
+    private val mViewModel: MyViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -41,6 +45,9 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         super.onViewCreated(view, savedInstanceState)
         mView = view
         setupData()
+        user_profile_add_to_allies_btn.setOnClickListener {
+            // add request sent functionality
+        }
     }
 
     private fun setupData() {
@@ -68,7 +75,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     }
 
     override fun userImageClickListener(postID: String) {
-        postDao.getUserUidByPostId(postID, mView)
+
     }
 
 }

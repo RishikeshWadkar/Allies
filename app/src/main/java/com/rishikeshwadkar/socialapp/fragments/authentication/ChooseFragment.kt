@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.authentication
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

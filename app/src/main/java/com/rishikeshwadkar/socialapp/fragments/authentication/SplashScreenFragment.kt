@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.authentication
 
 import android.animation.Animator
 import android.os.Bundle

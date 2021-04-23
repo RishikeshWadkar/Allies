@@ -5,7 +5,7 @@
     android:id="@+id/signUpConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SignUpFragment">
+    tools:context=".fragments.authentication.SignUpFragment">
 
 
     <ProgressBar

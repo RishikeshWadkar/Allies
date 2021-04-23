@@ -5,10 +5,10 @@
     android:id="@+id/edit_profile_fragment_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditProfileFragment">
+    tools:context=".fragments.profile.EditProfileFragment">
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/edit_profile_user_image"
         android:layout_width="100dp"
         android:layout_height="100dp"

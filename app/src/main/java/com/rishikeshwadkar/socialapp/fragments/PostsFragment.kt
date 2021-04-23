@@ -33,6 +33,10 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     private val postCollection = postDao.postCollection
     lateinit var mView: View
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
@@ -59,6 +63,11 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
                 adapter.startListening()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setUpRecyclerView()
     }
 
     override fun onStop() {

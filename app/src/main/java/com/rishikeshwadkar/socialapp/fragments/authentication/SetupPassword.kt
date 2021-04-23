@@ -1,17 +1,12 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.authentication
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.hardware.usb.UsbRequest
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import com.google.firebase.auth.ktx.auth
@@ -69,7 +64,7 @@ class SetupPassword : Fragment() {
                         currentUser.uid,
                         currentUser.displayName!!,
                         currentUser.email!!,
-                        currentUser.phoneNumber.toString(),
+                        "",
                         password.toString(),
                         currentUser.photoUrl.toString(),
                         requireContext()

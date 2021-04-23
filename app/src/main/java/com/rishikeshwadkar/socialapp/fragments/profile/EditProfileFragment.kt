@@ -1,11 +1,15 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments.profile
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,27 +17,36 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.graphics.drawable.toDrawable
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
+import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.IOException
+
 
 class EditProfileFragment : Fragment() {
 
     val userDao: UserDao = UserDao()
     val currentUser = Firebase.auth.currentUser
+    private val PICK_IMAGE_REQUEST = 71
+    private var filePath: Uri? = null
+    private var imageBitmap: Bitmap? = null
+    private var flag = false
+    private val mViewModel: MyViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,6 +59,9 @@ class EditProfileFragment : Fragment() {
         setData()
         edit_proflle_save_btn.setOnClickListener {
             updateData(view)
+        }
+        edit_profile_changeProfilePhoto_text.setOnClickListener {
+            chooseImage()
         }
     }
 
@@ -82,9 +98,10 @@ class EditProfileFragment : Fragment() {
             edit_profile_phone_text.requestFocus()
         }
         else{
+            mViewModel.showDialog(requireContext(), "Updating your data")
             // password
             currentUser!!.updatePassword(edit_profile_password_text.text.toString())
-            userDao.updatePassword(currentUser.uid,edit_profile_password_text.text.toString())
+            userDao.updatePassword(currentUser.uid, edit_profile_password_text.text.toString())
 
             // userName
             val req = UserProfileChangeRequest
@@ -95,13 +112,42 @@ class EditProfileFragment : Fragment() {
             // phone
             userDao.updatePhone(currentUser.uid, edit_profile_phone_text.text.toString())
 
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                Snackbar.make(edit_profile_fragment_constraint_layout, "Profile Updated", Snackbar.LENGTH_LONG)
-                        .setIcon(getDrawable(requireContext(), R.drawable.ic_check)!!, resources.getColor(R.color.white)).show()
+            if (flag){
+                mViewModel.uploadImageToFirebase(imageBitmap!!, edit_profile_fragment_constraint_layout, requireContext())
             }
-            Navigation.findNavController(view).navigate(R.id.action_editProfileFragment_to_myProfileFragment)
+            else{
+                mViewModel.dismissDialog()
 
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    Snackbar.make(edit_profile_fragment_constraint_layout, "Profile Updated", Snackbar.LENGTH_LONG)
+                        .setIcon(getDrawable(requireContext(), R.drawable.ic_check)!!, resources.getColor(
+                            R.color.white
+                        )).show()
+                }
+                Navigation.findNavController(view).navigate(R.id.action_editProfileFragment_to_myProfileFragment)
+            }
+        }
+    }
+
+    private fun chooseImage() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            filePath = data.data
+            try {
+                val bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, filePath)
+                edit_profile_user_image.setImageBitmap(bitmap)
+                imageBitmap = bitmap
+                flag = true
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
