@@ -75,6 +75,16 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        setupRecyclerView()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter?.stopListening()
+    }
+
     override fun likeButtonListener(postID: String) {
         postDao.updateLike(postID)
     }

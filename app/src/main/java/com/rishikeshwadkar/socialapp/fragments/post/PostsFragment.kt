@@ -1,20 +1,13 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.post
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
@@ -56,8 +49,8 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
         GlobalScope.launch(Dispatchers.IO) {
             query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
             val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
+            adapter = PostAdapter(recyclerViewOptions,mThis)
             withContext(Dispatchers.Main){
-                adapter = PostAdapter(recyclerViewOptions,mThis)
                 postRecyclerView.adapter = adapter
                 postRecyclerView.layoutManager = LinearLayoutManager(context)
                 adapter.startListening()
@@ -72,7 +65,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onStop() {
        super.onStop()
-       adapter.stopListening()
+       adapter?.stopListening()
     }
 
     override fun likeButtonListener(postID: String) {

@@ -183,8 +183,10 @@ class SignUpFragment : Fragment() {
                     mViewModel.dismissDialog()
                     Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_setupPassword)
                 }
-                else
+                else{
+                    mViewModel.dismissDialog()
                     mViewModel.updateUI(auth.currentUser, requireContext())
+                }
             }
         }
     }

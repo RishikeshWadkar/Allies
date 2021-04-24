@@ -7,13 +7,11 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
-import com.rishikeshwadkar.socialapp.fragments.PostsFragment
-import com.rishikeshwadkar.socialapp.fragments.PostsFragmentDirections
+import com.rishikeshwadkar.socialapp.fragments.post.PostsFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

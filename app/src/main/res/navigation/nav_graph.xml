@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/postsFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.PostsFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.post.PostsFragment"
         android:label="fragment_posts"
         tools:layout="@layout/fragment_posts" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"
-        android:name="com.rishikeshwadkar.socialapp.fragments.AddPostFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.post.AddPostFragment"
         android:label="fragment_add_post"
         tools:layout="@layout/fragment_add_post" >
         <action
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.rishikeshwadkar.socialapp.NotificationsFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

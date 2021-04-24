@@ -56,7 +56,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 firebaseUser.displayName.toString(),
                 firebaseUser.photoUrl.toString(),
                 firebaseUser.email.toString(),
-                firebaseUser.phoneNumber.toString()
+                ""
             )
 
             GlobalScope.launch(Dispatchers.IO) {

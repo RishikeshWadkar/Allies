@@ -34,6 +34,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     private val postDao: PostDao = PostDao()
     lateinit var mView: View
     private val mViewModel: MyViewModel by viewModels()
+    private var adapter: PostAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,12 +63,22 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                 Glide.with(user_profile_image_view).load(user.userImage).circleCrop().into(user_profile_image_view)
                 user_profile_post_number_tv.text = user.userPostCount.toString()
 
-                val adapter = PostAdapter(recyclerViewOptions, mThis)
+                adapter = PostAdapter(recyclerViewOptions, mThis)
                 user_profile_recycler_view.adapter = adapter
                 user_profile_recycler_view.layoutManager = LinearLayoutManager(requireContext())
-                adapter.startListening()
+                adapter!!.startListening()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupData()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter?.stopListening()
     }
 
     override fun likeButtonListener(postID: String) {

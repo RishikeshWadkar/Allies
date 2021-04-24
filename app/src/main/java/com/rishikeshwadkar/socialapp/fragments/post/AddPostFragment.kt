@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp.fragments
+package com.rishikeshwadkar.socialapp.fragments.post
 
 import android.os.Bundle
 import android.util.Log
