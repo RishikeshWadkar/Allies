@@ -12,8 +12,8 @@ import kotlinx.coroutines.tasks.await
 
 class UserDao {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val userCollection = db.collection("users")
+    val db = FirebaseFirestore.getInstance()
+    val userCollection = db.collection("users")
 
     fun addUser(user: User){
         user.let {
@@ -59,13 +59,28 @@ class UserDao {
         return userCollection.document(uId).get()
     }
 
-    fun addToMyAllies(myUid: String, alliesUid: String){
-        val user: User = User()
-        user.myAllies.add(alliesUid)
+    fun addRequest(uid: String, requesterUid: String){
         GlobalScope.launch(Dispatchers.IO) {
-            userCollection.document(myUid).update("myAllies", user.myAllies)
+            val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
+            val oppositeUser: User = userCollection.document(requesterUid).get().await().toObject(User::class.java)!!
+            user.userRequestSent.add(requesterUid)
+            oppositeUser.userRequests.add(uid)
+            userCollection.document(uid).set(user)
+            userCollection.document(requesterUid).set(oppositeUser)
         }
+    }
 
+    fun addToAllies(uid: String, likerUid: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
+            val oppositeUser: User = userCollection.document(likerUid).get().await().toObject(User::class.java)!!
+            user.userRequests.remove(likerUid)
+            user.userAllies.add(likerUid)
+            oppositeUser.userRequestSent.remove(uid)
+            oppositeUser.userAllies.add(uid)
+            userCollection.document(uid).set(user)
+            userCollection.document(likerUid).set(oppositeUser)
+        }
     }
 
 }

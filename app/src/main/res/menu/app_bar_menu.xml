@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="Notification"
-        android:id="@+id/notificationsFragment"
+        android:id="@+id/notificationsViewPagerFragment"
         android:icon="@drawable/app_bar_notification_selector"
         app:showAsAction="always"
         />

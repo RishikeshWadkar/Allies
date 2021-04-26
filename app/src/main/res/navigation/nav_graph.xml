@@ -68,8 +68,25 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/notificationsFragment"
+        android:id="@+id/notificationsViewPagerFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.notification.NotificationsViewPagerFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications_view_pager" >
+        <action
+            android:id="@+id/action_notificationsViewPagerFragment_to_notificationsFragment2"
+            app:destination="@id/notificationsFragment2" />
+        <action
+            android:id="@+id/action_notificationsViewPagerFragment_to_friendRequestsFragment"
+            app:destination="@id/friendRequestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment2"
         android:name="com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/friendRequestsFragment"
+        android:name="com.rishikeshwadkar.socialapp.FriendRequestsFragment"
+        android:label="fragment_friend_requests"
+        tools:layout="@layout/fragment_friend_requests" />
 </navigation>

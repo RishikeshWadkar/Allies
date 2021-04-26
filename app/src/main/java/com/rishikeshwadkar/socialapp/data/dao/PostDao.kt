@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.models.Notification
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.fragments.post.PostsFragmentDirections
@@ -22,6 +23,8 @@ class PostDao {
     private val db = FirebaseFirestore.getInstance()
     val postCollection = db.collection("posts")
     private val auth = Firebase.auth
+    private val notificationsDao = NotificationsDao()
+    private val userDao = UserDao()
 
     fun addPost(text: String){
         val currentUserId = auth.currentUser!!.uid
@@ -57,15 +60,33 @@ class PostDao {
 
     fun updateLike(postID: String){
         GlobalScope.launch(Dispatchers.IO) {
-            val currentUser = auth.currentUser!!.uid
             val post = getPostByID(postID).await().toObject(Post::class.java)
-            val liked = post?.likedBy?.contains(currentUser)
+            val liked = post?.likedBy?.contains(Firebase.auth.uid)
+            val user: User = userDao.getUserById(Firebase.auth.uid!!).await().toObject(User::class.java)!!
 
             if(liked!!){
-                post.likedBy.remove(currentUser)
+                post.likedBy.remove(Firebase.auth.uid)
+                GlobalScope.launch {
+                    notificationsDao.notificationsCollection.whereEqualTo("uid", post.createdBy.uid)
+                            .whereEqualTo("postId", postID).get().addOnSuccessListener { documents ->
+                                for (document in documents){
+                                    notificationsDao.notificationsCollection.document(document.id).delete()
+                                }
+                            }
+                }
             }
             else{
-                post.likedBy.add(currentUser)
+                post.likedBy.add(Firebase.auth.uid!!)
+                val currentTime: Long = System.currentTimeMillis()
+                val notification: Notification = Notification(
+                        post.createdBy.uid,
+                        user.userImage,
+                        "${user.userDisplayName} liked your post",
+                        currentTime,
+                        postID,
+                        Firebase.auth.currentUser!!.uid
+                )
+                notificationsDao.addLikeNotification(notification)
             }
 
             postCollection.document(postID).update("likedBy",post.likedBy)

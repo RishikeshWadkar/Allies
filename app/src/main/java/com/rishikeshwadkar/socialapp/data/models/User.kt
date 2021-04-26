@@ -8,6 +8,9 @@ data class User(
         val userPhoneNo : String = "",
         val userPassword : String = "",
         val userPostCount : Int = 0,
-        val myAllies: ArrayList<String> = ArrayList()
+        val userAllies: ArrayList<String> = ArrayList(),
+        val userRequests: ArrayList<String> = ArrayList(),
+        val userRequestSent: ArrayList<String> = ArrayList()
+
 )
 

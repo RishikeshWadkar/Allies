@@ -51,23 +51,22 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
 
             val activity = context as Activity
 
-            val user = User(
-                firebaseUser.uid,
-                firebaseUser.displayName.toString(),
-                firebaseUser.photoUrl.toString(),
-                firebaseUser.email.toString(),
-                ""
-            )
-
             GlobalScope.launch(Dispatchers.IO) {
-                val userBool = userDao.getUserById(user.uid).await().toObject(User::class.java)
+                val userBool = userDao.getUserById(firebaseUser.uid).await().toObject(User::class.java)
                 withContext(Dispatchers.Main){
                     if(userBool == null){
-                        Log.d("user", "inside if ${user.userDisplayName}")
+                        Log.d("user", "inside if ${firebaseUser.uid}")
+                        val user = User(
+                                firebaseUser.uid,
+                                firebaseUser.displayName.toString(),
+                                firebaseUser.photoUrl.toString(),
+                                firebaseUser.email.toString(),
+                                ""
+                        )
                         userDao.addUser(user)
                     }
                     else
-                        Log.d("user", "else ${user.userDisplayName}")
+                        Log.d("user", "else ${firebaseUser.uid}")
                 }
             }
 
@@ -105,7 +104,6 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         }
 
         userDao.addUser(user)
-
         val intent = Intent(context, MainActivity::class.java)
         context.startActivity(intent)
         activity.finish()

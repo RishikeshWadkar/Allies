@@ -23,13 +23,14 @@ class SignInActivity : AppCompatActivity() {
     val userDao = UserDao()
     var user: com.rishikeshwadkar.socialapp.data.models.User? = com.rishikeshwadkar.socialapp.data.models.User()
     private var currentUser = Firebase.auth.currentUser
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
 
         navHost = supportFragmentManager.findFragmentById(R.id.sign_in_navHost) as NavHost
-        val navController: NavController = navHost.navController
+        navController = navHost.navController
     }
 
     override fun onStart() {
@@ -44,7 +45,7 @@ class SignInActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main){
                     if(user == null){
                         Log.d("userVerify", "mokla $user")
-
+                        navController.navigate(R.id.setupPassword)
                     }
                     else if(user!!.userPassword.isNotEmpty()){
                         Log.d("userVerify", user!!.userPassword)
@@ -60,7 +61,6 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun updateUI(){
-
         mViewModel.updateUI(currentUser, this)
     }
 
