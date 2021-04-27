@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.Navigation
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
@@ -28,8 +29,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.activities.MainActivity
+import com.rishikeshwadkar.socialapp.data.adapter.NotificationsAdapter
+import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
+import dev.shreyaspatil.MaterialDialog.MaterialDialog
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -44,6 +48,8 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     private val userDao: UserDao = UserDao()
     val currentUser = Firebase.auth.currentUser
     lateinit var dialog: ProgressDialog
+    private val notificationsDao = NotificationsDao()
+    private lateinit var mDialog: MaterialDialog.Builder
 
     fun updateUI(firebaseUser: FirebaseUser?, context: Context): Boolean {
         if(firebaseUser != null){
@@ -57,11 +63,11 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                     if(userBool == null){
                         Log.d("user", "inside if ${firebaseUser.uid}")
                         val user = User(
-                                firebaseUser.uid,
-                                firebaseUser.displayName.toString(),
-                                firebaseUser.photoUrl.toString(),
-                                firebaseUser.email.toString(),
-                                ""
+                            firebaseUser.uid,
+                            firebaseUser.displayName.toString(),
+                            firebaseUser.photoUrl.toString(),
+                            firebaseUser.email.toString(),
+                            ""
                         )
                         userDao.addUser(user)
                     }
@@ -151,9 +157,11 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     Snackbar.make(view, "Profile Updated", Snackbar.LENGTH_LONG)
                         .setIcon(
-                            AppCompatResources.getDrawable(context, R.drawable.ic_check)!!, context.resources.getColor(
-                            R.color.white
-                        )).show()
+                            AppCompatResources.getDrawable(context, R.drawable.ic_check)!!,
+                            context.resources.getColor(
+                                R.color.white
+                            )
+                        ).show()
                 }
                 Navigation.findNavController(view).navigate(R.id.action_editProfileFragment_to_myProfileFragment)
                 dismissDialog()
@@ -173,6 +181,60 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             drawable.setTint(colorTint)
             drawable.setTintMode(PorterDuff.Mode.SRC_ATOP)
             textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        }
+    }
+
+    fun setupMaterialDialog(
+        context: Context,
+        uid: String,
+        likerUid: String,
+        adapter: NotificationsAdapter,
+        position: Int
+    ){
+        mDialog = MaterialDialog.Builder(context as Activity)
+        mDialog.setTitle("Remove?")
+        mDialog.setMessage("Are you sure")
+        mDialog.setCancelable(false)
+        mDialog.setAnimation("delete_remove.json")
+        mDialog.setPositiveButton(
+            "Remove",
+            R.drawable.add_button_shape
+        ){ dialogInterface, which ->
+                dialogInterface.dismiss()
+                showDialog(context, "Removing")
+                removeFromAllies(uid, likerUid, adapter, position)
+
+        }.setNegativeButton(
+            "Cancel", R.drawable.added_button_shape
+        ) { dialogInterface, which -> dialogInterface.dismiss() }
+            .build().show()
+    }
+
+    private fun removeFromAllies(
+        uid: String,
+        oppositeUserUid: String,
+        adapter: NotificationsAdapter,
+        position: Int
+    ){
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val user: User = userDao.getUserById(uid)
+                .await().toObject(User::class.java)!!
+            val oppositeUser: User = userDao.getUserById(oppositeUserUid)
+                .await().toObject(User::class.java)!!
+
+            user.userAllies.remove(oppositeUserUid)
+            oppositeUser.userAllies.remove(uid)
+
+            userDao.userCollection.document(uid).update("userAllies", user.userAllies)
+            userDao.userCollection.document(oppositeUserUid).update(
+                "userAllies",
+                oppositeUser.userAllies
+            )
+                .addOnSuccessListener {
+                    dismissDialog()
+                    adapter.notifyItemChanged(position)
+                }
         }
     }
 }

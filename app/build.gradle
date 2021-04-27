@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.rishikeshwadkar.socialapp"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -90,5 +90,8 @@ dependencies {
 
     // viewPager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    // material dialog by shreyas
+    implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.2'
 
 }

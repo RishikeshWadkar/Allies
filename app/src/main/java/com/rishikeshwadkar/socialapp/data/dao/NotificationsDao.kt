@@ -7,6 +7,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.data.models.Notification
+import com.rishikeshwadkar.socialapp.data.models.User
+import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,6 +18,7 @@ class NotificationsDao {
     private val db = FirebaseFirestore.getInstance()
     val currentUser: FirebaseUser? = Firebase.auth.currentUser
     val notificationsCollection = db.collection("notifications")
+    val userDao: UserDao = UserDao()
 
     fun addLikeNotification(notification: Notification){
         GlobalScope.launch(Dispatchers.IO) {
@@ -26,4 +29,6 @@ class NotificationsDao {
     fun getNotificationById(uid: String): Task<DocumentSnapshot>{
         return notificationsCollection.document(uid).get()
     }
+
+
 }

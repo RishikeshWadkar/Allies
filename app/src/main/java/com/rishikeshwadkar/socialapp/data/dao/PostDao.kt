@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.models.Notification
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
@@ -58,7 +59,7 @@ class PostDao {
         }
     }
 
-    fun updateLike(postID: String){
+    fun updateLike(postID: String, adapter: PostAdapter, position: Int){
         GlobalScope.launch(Dispatchers.IO) {
             val post = getPostByID(postID).await().toObject(Post::class.java)
             val liked = post?.likedBy?.contains(Firebase.auth.uid)
@@ -89,7 +90,9 @@ class PostDao {
                 notificationsDao.addLikeNotification(notification)
             }
 
-            postCollection.document(postID).update("likedBy",post.likedBy)
+            postCollection.document(postID).update("likedBy",post.likedBy).addOnSuccessListener {
+                adapter.notifyItemChanged(position)
+            }
         }
     }
 }

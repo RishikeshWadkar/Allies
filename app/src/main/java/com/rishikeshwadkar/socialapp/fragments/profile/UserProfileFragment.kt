@@ -56,6 +56,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userDao.getUserById(mNavArgs.uid).await().toObject(User::class.java)!!
             val query: Query = postDao.postCollection.whereEqualTo("createdBy.uid", user.uid)
+                .orderBy("currentTime", Query.Direction.DESCENDING)
             val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query,Post::class.java).build()
 
             withContext(Dispatchers.Main){
@@ -81,8 +82,8 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         adapter?.stopListening()
     }
 
-    override fun likeButtonListener(postID: String) {
-        postDao.updateLike(postID)
+    override fun likeButtonListener(postID: String, position: Int) {
+        postDao.updateLike(postID, adapter!!, position)
     }
 
     override fun userImageClickListener(postID: String) {

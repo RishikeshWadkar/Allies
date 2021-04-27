@@ -59,6 +59,7 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     Glide.with(my_profile_image_view).load(currentUser.userImage).circleCrop().into(my_profile_image_view)
                     val query: Query = postDao.postCollection
                             .whereEqualTo("createdBy.uid", Firebase.auth.currentUser!!.uid)
+                        .orderBy("currentTime", Query.Direction.DESCENDING)
 
                     val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
                     //Log.d("mQuery", recyclerViewOptions.snapshots.getSnapshot(0).id)
@@ -85,8 +86,8 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         adapter?.stopListening()
     }
 
-    override fun likeButtonListener(postID: String) {
-        postDao.updateLike(postID)
+    override fun likeButtonListener(postID: String, position: Int) {
+        postDao.updateLike(postID, adapter!!, position)
     }
 
     override fun userImageClickListener(postID: String) {

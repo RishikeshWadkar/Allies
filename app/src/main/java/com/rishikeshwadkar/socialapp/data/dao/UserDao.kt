@@ -4,11 +4,13 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.rishikeshwadkar.socialapp.data.adapter.NotificationsAdapter
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class UserDao {
 
@@ -59,7 +61,7 @@ class UserDao {
         return userCollection.document(uId).get()
     }
 
-    fun addRequest(uid: String, requesterUid: String){
+    fun addRequest(uid: String, requesterUid: String, adapter: NotificationsAdapter, position: Int){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
             val oppositeUser: User = userCollection.document(requesterUid).get().await().toObject(User::class.java)!!
@@ -67,10 +69,13 @@ class UserDao {
             oppositeUser.userRequests.add(uid)
             userCollection.document(uid).set(user)
             userCollection.document(requesterUid).set(oppositeUser)
+            withContext(Dispatchers.Main){
+                adapter.notifyItemChanged(position)
+            }
         }
     }
 
-    fun addToAllies(uid: String, likerUid: String){
+    fun addToAllies(uid: String, likerUid: String, adapter: NotificationsAdapter, position: Int){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
             val oppositeUser: User = userCollection.document(likerUid).get().await().toObject(User::class.java)!!
@@ -80,6 +85,9 @@ class UserDao {
             oppositeUser.userAllies.add(uid)
             userCollection.document(uid).set(user)
             userCollection.document(likerUid).set(oppositeUser)
+            withContext(Dispatchers.Main){
+                adapter.notifyItemChanged(position)
+            }
         }
     }
 

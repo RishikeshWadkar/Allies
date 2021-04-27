@@ -65,11 +65,11 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onStop() {
        super.onStop()
-       adapter?.stopListening()
+       //adapter?.stopListening()
     }
 
-    override fun likeButtonListener(postID: String) {
-        postDao.updateLike(postID)
+    override fun likeButtonListener(postID: String, position: Int) {
+        postDao.updateLike(postID, adapter, position)
     }
 
     override fun userImageClickListener(postID: String) {

@@ -39,7 +39,7 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationsViewHolder {
         val viewHolder = NotificationsViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.notifications_item_view, parent, false))
         viewHolder.notificationBtn.setOnClickListener {
-            listener.onNotificationButtonClickListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+            listener.onNotificationButtonClickListener(snapshots.getSnapshot(viewHolder.adapterPosition).id, viewHolder.adapterPosition)
             GlobalScope.launch {
                 val model = notificationsDao
                         .getNotificationById(snapshots.getSnapshot(viewHolder.adapterPosition).id)
@@ -73,6 +73,11 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
                         holder.notificationBtn.setTextColor(Color.WHITE)
                         holder.notificationBtn.setBackgroundResource(R.drawable.add_button_shape)
                     }
+                    user.userRequestSent.contains(model.likerUid) -> {
+                        holder.notificationBtn.text = "Requested"
+                        holder.notificationBtn.setTextColor(Color.WHITE)
+                        holder.notificationBtn.setBackgroundResource(R.drawable.add_button_shape)
+                    }
                     else -> {
                         holder.notificationBtn.text = "Add"
                         holder.notificationBtn.setTextColor(Color.WHITE)
@@ -84,6 +89,6 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
     }
 
     interface NotificationListener{
-        fun onNotificationButtonClickListener(notificationId: String)
+        fun onNotificationButtonClickListener(notificationId: String, position: Int)
     }
 }
