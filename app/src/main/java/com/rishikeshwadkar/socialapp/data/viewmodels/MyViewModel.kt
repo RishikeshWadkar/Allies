@@ -20,7 +20,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.AndroidViewModel
 import androidx.navigation.Navigation
-import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseUser
@@ -34,7 +33,7 @@ import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import dev.shreyaspatil.MaterialDialog.MaterialDialog
-import kotlinx.android.synthetic.main.fragment_edit_profile.*
+import kotlinx.android.synthetic.main.fragment_user_profile.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -184,11 +183,11 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun setupMaterialDialog(
+    fun setupMaterialDialogRemoveAllies(
         context: Context,
         uid: String,
         likerUid: String,
-        adapter: NotificationsAdapter,
+        adapter: NotificationsAdapter?,
         position: Int
     ){
         mDialog = MaterialDialog.Builder(context as Activity)
@@ -213,7 +212,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     private fun removeFromAllies(
         uid: String,
         oppositeUserUid: String,
-        adapter: NotificationsAdapter,
+        adapter: NotificationsAdapter?,
         position: Int
     ){
 
@@ -232,9 +231,71 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 oppositeUser.userAllies
             )
                 .addOnSuccessListener {
-                    dismissDialog()
-                    adapter.notifyItemChanged(position)
+                    if(adapter != null){
+                        notificationsDao.removeNotification(adapter.snapshots.getSnapshot(position).id)
+                        dismissDialog()
+                        adapter.notifyItemChanged(position)
+                    }else
+                        dismissDialog()
                 }
         }
+    }
+
+    private fun removeRequest(fromUid: String, toUid: String, adapter: NotificationsAdapter?, position: Int){
+        GlobalScope.launch(Dispatchers.IO) {
+            val user: User = userDao.getUserById(fromUid).await().toObject(User::class.java)!!
+            val oppositeUser = userDao.getUserById(toUid).await().toObject(User::class.java)
+
+            user.userRequestSent.remove(toUid)
+            oppositeUser!!.userRequests.remove(fromUid)
+            userDao.userCollection.document(fromUid).update("userRequestSent", user.userRequestSent)
+            userDao.userCollection.document(toUid).update("userRequests", oppositeUser.userRequests)
+                    .addOnSuccessListener {
+                        notificationsDao.notificationsCollection
+                                .whereEqualTo("to", toUid)
+                                .whereEqualTo("from", fromUid)
+                                .whereEqualTo("type", "Request")
+                                .get().addOnSuccessListener { documents ->
+                                    for (document in documents){
+                                        notificationsDao.notificationsCollection.document(document.id).delete()
+                                    }
+                                }
+                    }
+            withContext(Dispatchers.Main){
+                adapter?.notifyItemChanged(position)
+            }
+        }
+    }
+
+    fun setUpMaterialDialogRemoveRequest(
+            context: Context,
+            fromUid: String,
+            toUid: String,
+            adapter: NotificationsAdapter?,
+            position: Int,
+            title: String,
+            msg: String,
+            positiveBtn: String,
+            loadingText: String
+    ){
+        mDialog = MaterialDialog.Builder(context as Activity)
+        mDialog.setTitle(title)
+        mDialog.setMessage(msg)
+        mDialog.setCancelable(false)
+        mDialog.setAnimation("delete_remove.json")
+        mDialog.setPositiveButton(
+                positiveBtn,
+                R.drawable.add_button_shape
+        ){ dialogInterface, which ->
+            dialogInterface.dismiss()
+            removeRequest(fromUid, toUid, adapter,position)
+            //showDialog(context, loadingText)
+
+
+            context.user_profile_add_to_allies_btn.text = "Add to Allies"
+        }.setNegativeButton(
+                "Cancel", R.drawable.added_button_shape
+        ) { dialogInterface, which -> dialogInterface.dismiss() }
+                .build().show()
     }
 }

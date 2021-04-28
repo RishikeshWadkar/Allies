@@ -1,10 +1,10 @@
 package com.rishikeshwadkar.socialapp.data.models
 
 data class Notification(
-        val uid: String = "",
-        val userImage: String = "",
+        val type: String = "",
+        val from: String = "",
+        val to: String = "",
         val notificationText: String = "",
         val currentTime: Long = 0L,
-        val postId: String = "",
-        val likerUid: String = ""
+        val postId: String = ""
 )

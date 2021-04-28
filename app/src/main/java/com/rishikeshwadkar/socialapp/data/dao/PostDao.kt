@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
@@ -68,10 +69,15 @@ class PostDao {
             if(liked!!){
                 post.likedBy.remove(Firebase.auth.uid)
                 GlobalScope.launch {
-                    notificationsDao.notificationsCollection.whereEqualTo("uid", post.createdBy.uid)
-                            .whereEqualTo("postId", postID).get().addOnSuccessListener { documents ->
+                    notificationsDao.notificationsCollection.whereEqualTo("to", post.createdBy.uid)
+                            .whereEqualTo("from", Firebase.auth.currentUser!!.uid)
+                            .orderBy("currentTime", Query.Direction.DESCENDING)
+                            .get().addOnSuccessListener { documents ->
+                                var tempCounter: Int = 0
                                 for (document in documents){
+                                    if (tempCounter > 0) break
                                     notificationsDao.notificationsCollection.document(document.id).delete()
+                                    tempCounter++
                                 }
                             }
                 }
@@ -79,17 +85,19 @@ class PostDao {
             else{
                 post.likedBy.add(Firebase.auth.uid!!)
                 val currentTime: Long = System.currentTimeMillis()
-                val notification: Notification = Notification(
-                        post.createdBy.uid,
-                        user.userImage,
-                        "${user.userDisplayName} liked your post",
-                        currentTime,
-                        postID,
-                        Firebase.auth.currentUser!!.uid
-                )
-                notificationsDao.addLikeNotification(notification)
-            }
 
+                if (post.createdBy.uid != user.uid){
+                    val notification: Notification = Notification(
+                            "Like",
+                            user.uid,
+                            post.createdBy.uid,
+                            "${user.userDisplayName} liked your post",
+                            currentTime,
+                            postID
+                    )
+                    notificationsDao.addLikeNotification(notification)
+                }
+            }
             postCollection.document(postID).update("likedBy",post.likedBy).addOnSuccessListener {
                 adapter.notifyItemChanged(position)
             }

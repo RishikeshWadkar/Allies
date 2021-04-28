@@ -61,7 +61,7 @@ class UserDao {
         return userCollection.document(uId).get()
     }
 
-    fun addRequest(uid: String, requesterUid: String, adapter: NotificationsAdapter, position: Int){
+    fun addRequest(uid: String, requesterUid: String, adapter: NotificationsAdapter?, position: Int){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
             val oppositeUser: User = userCollection.document(requesterUid).get().await().toObject(User::class.java)!!
@@ -70,12 +70,12 @@ class UserDao {
             userCollection.document(uid).set(user)
             userCollection.document(requesterUid).set(oppositeUser)
             withContext(Dispatchers.Main){
-                adapter.notifyItemChanged(position)
+                adapter?.notifyItemChanged(position)
             }
         }
     }
 
-    fun addToAllies(uid: String, likerUid: String, adapter: NotificationsAdapter, position: Int){
+    fun addToAllies(uid: String, likerUid: String){
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
             val oppositeUser: User = userCollection.document(likerUid).get().await().toObject(User::class.java)!!
@@ -85,9 +85,6 @@ class UserDao {
             oppositeUser.userAllies.add(uid)
             userCollection.document(uid).set(user)
             userCollection.document(likerUid).set(oppositeUser)
-            withContext(Dispatchers.Main){
-                adapter.notifyItemChanged(position)
-            }
         }
     }
 

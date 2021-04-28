@@ -9,6 +9,7 @@ import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.data.models.Notification
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,6 +20,8 @@ class NotificationsDao {
     val currentUser: FirebaseUser? = Firebase.auth.currentUser
     val notificationsCollection = db.collection("notifications")
     val userDao: UserDao = UserDao()
+    var duplicateCounter: Int = 0
+
 
     fun addLikeNotification(notification: Notification){
         GlobalScope.launch(Dispatchers.IO) {
@@ -26,9 +29,20 @@ class NotificationsDao {
         }
     }
 
+    fun removeNotification(notificationId: String){
+        GlobalScope.launch(Dispatchers.IO) {
+            notificationsCollection.document(notificationId).delete()
+        }
+    }
+
     fun getNotificationById(uid: String): Task<DocumentSnapshot>{
         return notificationsCollection.document(uid).get()
     }
 
+    fun addAddToAllieRequestsNotification(notification: Notification){
+        GlobalScope.launch {
+            notificationsCollection.document().set(notification).await()
+        }
+    }
 
 }

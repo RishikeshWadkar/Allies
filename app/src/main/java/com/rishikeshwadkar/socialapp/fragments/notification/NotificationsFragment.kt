@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
@@ -25,7 +26,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.text.FieldPosition
 
 class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListener {
 
@@ -48,7 +48,8 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
     private fun setupRecyclerView() {
         val mThis = this
         GlobalScope.launch(Dispatchers.IO) {
-            val query: Query = notificationsDao.notificationsCollection.whereEqualTo("uid", Firebase.auth.currentUser!!.uid)
+            val query: Query = notificationsDao.notificationsCollection.whereEqualTo("to", Firebase.auth.currentUser!!.uid)
+                    .orderBy("currentTime", Query.Direction.DESCENDING)
 
             val recyclerOptions = FirestoreRecyclerOptions.Builder<Notification>().setQuery(query,Notification::class.java).build()
             withContext(Dispatchers.Main){
@@ -61,28 +62,30 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
     }
 
     override fun onNotificationButtonClickListener(notificationId: String, position: Int) {
-        Log.d("noti", "clicked")
-        val mThis = this
+        mViewModel.showDialog(requireContext(), "Loading")
         GlobalScope.launch(Dispatchers.IO) {
-            val notification: Notification = notificationsDao.getNotificationById(notificationId).await().toObject(Notification::class.java)!!
-            val user: User = userDao.getUserById(notification.uid).await().toObject(User::class.java)!!
+            val notification: Notification = notificationsDao.getNotificationById(notificationId)
+                    .await().toObject(Notification::class.java)!!
+            val fromUser: User = userDao.getUserById(notification.from)
+                    .await().toObject(User::class.java)!!
+
             withContext(Dispatchers.Main){
-                if (user.userAllies.contains(notification.likerUid)){
-                    mViewModel.setupMaterialDialog(requireContext(), user.uid, notification.likerUid, adapter, position)
-                }
-                else if (user.userRequests.contains(notification.likerUid)){
-                    userDao.addToAllies(user.uid, notification.likerUid, adapter, position)
-                }
-                else if (user.userRequestSent.contains(notification.likerUid)){}
-                else {
-                    userDao.addRequest(user.uid, notification.likerUid, adapter, position)
-                }
+                userDao.addToAllies(notification.to, notification.from)
+                notificationsDao.removeNotification(notificationId)
+                val snackbar = Snackbar.make(
+                        notificationFragmentConstraintLayout,
+                        "${fromUser.userDisplayName} is now your Allies",
+                        Snackbar.LENGTH_LONG
+                        )
+                snackbar.setAction("Action", null)
+                snackbar.show()
+                mViewModel.dismissDialog()
             }
         }
     }
 
     override fun onStop() {
         super.onStop()
-        //adapter.stopListening()
+        adapter.stopListening()
     }
 }
