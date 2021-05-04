@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.rishikeshwadkar.socialapp.FriendRequestsFragment
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.VPAdapter
 import kotlinx.android.synthetic.main.fragment_notifications_view_pager.*
@@ -29,13 +28,14 @@ class NotificationsViewPagerFragment : Fragment() {
         val viewPager2 = notification_view_pager_2
         val tabLayout: TabLayout = notifications_viewpager_tablayout as TabLayout
 
-        val vpAdapter = VPAdapter(requireFragmentManager(), lifecycle)
+        val vpAdapter = VPAdapter(childFragmentManager, lifecycle)
         vpAdapter.addFragment(NotificationsFragment(), "Notifications")
-        vpAdapter.addFragment(FriendRequestsFragment(), "Requests")
+        vpAdapter.addFragment(SentRequestPendingFragment(), "Requests")
         viewPager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewPager2.adapter = vpAdapter
 
         tabLayout.getTabAt(0)?.orCreateBadge?.number = 1
+
         if (tabLayout.getTabAt(0)?.badge?.number == 0)
             tabLayout.getTabAt(0)!!.removeBadge()
 

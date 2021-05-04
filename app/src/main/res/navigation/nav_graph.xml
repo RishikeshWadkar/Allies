@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_postsFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_postsFragment_to_chatViewPagerFragment"
+            app:destination="@id/chatViewPagerFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPostFragment"
@@ -66,6 +69,9 @@
         <argument
             android:name="uid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_chatWithUserFragment"
+            app:destination="@id/chatWithUserFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationsViewPagerFragment"
@@ -78,6 +84,9 @@
         <action
             android:id="@+id/action_notificationsViewPagerFragment_to_friendRequestsFragment"
             app:destination="@id/friendRequestsFragment" />
+        <action
+            android:id="@+id/action_notificationsViewPagerFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment2"
@@ -86,7 +95,45 @@
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/friendRequestsFragment"
-        android:name="com.rishikeshwadkar.socialapp.FriendRequestsFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.notification.SentRequestPendingFragment"
         android:label="fragment_friend_requests"
-        tools:layout="@layout/fragment_friend_requests" />
-</navigation>
+        tools:layout="@layout/fragment_sent_request_pending" />
+    <fragment
+        android:id="@+id/chatViewPagerFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatViewPagerFragment"
+        android:label="fragment_chat_view_pager"
+        tools:layout="@layout/fragment_chat_view_pager" >
+        <action
+            android:id="@+id/action_chatViewPagerFragment_to_chatAlliesUsersListFragment"
+            app:destination="@id/chatAlliesUsersListFragment" />
+        <action
+            android:id="@+id/action_chatViewPagerFragment_to_chatUsersListFragment"
+            app:destination="@id/chatUsersListFragment" />
+        <action
+            android:id="@+id/action_chatViewPagerFragment_to_chatWithUserFragment"
+            app:destination="@id/chatWithUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatAlliesUsersListFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatChatAlliesListFragment"
+        android:label="fragment_chat_allies_users_list"
+        tools:layout="@layout/fragment_chat_allies_users_list" />
+    <fragment
+        android:id="@+id/chatUsersListFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatUsersListFragment"
+        android:label="fragment_chat_users_list"
+        tools:layout="@layout/fragment_chat_users_list" >
+        <action
+            android:id="@+id/action_chatUsersListFragment_to_chatWithUserFragment"
+            app:destination="@id/chatWithUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatWithUserFragment"
+        android:name="com.rishikeshwadkar.socialapp.ChatWithUserFragment"
+        android:label="fragment_chat_with_user"
+        tools:layout="@layout/fragment_chat_with_user" >
+        <argument
+            android:name="oppositeUid"
+            app:argType="string" />
+    </fragment>
+    </navigation>

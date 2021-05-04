@@ -2,11 +2,13 @@ package com.rishikeshwadkar.socialapp.fragments.profile
 
 import android.os.Bundle
 import android.text.format.Time
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -57,6 +59,11 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         user_profile_add_to_allies_btn.setOnClickListener {
             addToAllies()
         }
+
+        user_profile_msg_user.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToChatWithUserFragment(mNavArgs.uid)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 
     private fun addToAllies() {
@@ -92,6 +99,15 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         }
         else if (user_profile_add_to_allies_btn.text == "Accept"){
             userDao.addToAllies(Firebase.auth.uid!!, mNavArgs.uid)
+            Log.d("removeNotification", "currUID -> ${Firebase.auth.currentUser!!.uid} oppositeUid -> $mNavArgs")
+            notificationsDao.notificationsCollection.whereEqualTo("from", mNavArgs.uid)
+                    .whereEqualTo("type", "Request")
+                    .whereEqualTo("to", Firebase.auth.currentUser!!.uid).get().addOnSuccessListener { documents ->
+                        for (document in documents){
+                            Log.d("removeNotification", document.id)
+                            notificationsDao.removeNotification(document.id)
+                        }
+                    }
             user_profile_add_to_allies_btn.text = "Allies"
         }
         else if (user_profile_add_to_allies_btn.text == "Allies"){
@@ -100,7 +116,6 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
             mNavArgs.uid,
             null,
             0)
-            user_profile_add_to_allies_btn.text = "Add to Allies"
         }
     }
 
@@ -134,15 +149,20 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
             withContext(Dispatchers.Main){
                 when {
                     currentUser.userRequestSent.contains(oppositeUser.uid) -> {
-                        user_profile_add_to_allies_btn.text = "Request sent"
+                        user_profile_msg_user.visibility = View.GONE
+                        user_profile_add_to_allies_btn.text = "Request Sent"
                     }
                     currentUser.userRequests.contains(oppositeUser.uid) -> {
+                        user_profile_msg_user.visibility = View.GONE
                         user_profile_add_to_allies_btn.text = "Accept"
                     }
                     currentUser.userAllies.contains(oppositeUser.uid) -> {
+                        user_profile_msg_user.visibility = View.VISIBLE
                         user_profile_add_to_allies_btn.text = "Allies"
                     }
-                    else -> user_profile_add_to_allies_btn.text = "Add to Allies"
+                    else -> {user_profile_add_to_allies_btn.text = "Add to Allies"
+                        user_profile_msg_user.visibility = View.GONE
+                    }
                 }
             }
         }

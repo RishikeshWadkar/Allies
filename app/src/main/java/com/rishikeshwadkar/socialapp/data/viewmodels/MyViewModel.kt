@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.lang.Error
 
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
@@ -201,6 +202,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         ){ dialogInterface, which ->
                 dialogInterface.dismiss()
                 showDialog(context, "Removing")
+                context.user_profile_add_to_allies_btn.text = "Add to Allies"
                 removeFromAllies(uid, likerUid, adapter, position)
 
         }.setNegativeButton(
@@ -290,9 +292,10 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
             dialogInterface.dismiss()
             removeRequest(fromUid, toUid, adapter,position)
             //showDialog(context, loadingText)
-
-
-            context.user_profile_add_to_allies_btn.text = "Add to Allies"
+            try {
+                context.user_profile_add_to_allies_btn.text = "Add to Allies"
+            }
+            catch (e: NullPointerException){}
         }.setNegativeButton(
                 "Cancel", R.drawable.added_button_shape
         ) { dialogInterface, which -> dialogInterface.dismiss() }

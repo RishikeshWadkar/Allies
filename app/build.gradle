@@ -94,4 +94,6 @@ dependencies {
     // material dialog by shreyas
     implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.2'
 
+    // Notification badge
+    implementation 'com.nex3z:notification-badge:1.0.4'
 }

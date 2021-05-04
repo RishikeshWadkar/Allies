@@ -7,6 +7,7 @@
         android:title="Posts" />
 
     <item
+        android:id="@+id/chatViewPagerFragment"
         android:icon="@drawable/bottom_navigation_selector_profile"
         android:title="chat" />
 

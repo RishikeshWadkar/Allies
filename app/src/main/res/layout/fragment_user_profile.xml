@@ -21,15 +21,13 @@
         android:id="@+id/user_profile_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:fontFamily="sans-serif-medium"
         android:foregroundGravity="center"
         android:gravity="center"
         android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/user_profile_image_view"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/user_profile_image_view"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_image_view" />
 
     <TextView
@@ -113,10 +111,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:background="@drawable/edit_profile_background"
         android:gravity="center"
         android:padding="3dp"
@@ -124,8 +120,29 @@
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/user_profile_msg_user"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_profile_user_name" />
+
+    <TextView
+        android:id="@+id/user_profile_msg_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edit_profile_background"
+        android:gravity="center"
+        android:padding="3dp"
+        android:text="Message"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/user_profile_add_to_allies_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_add_to_allies_btn"
+        app:layout_constraintTop_toTopOf="@+id/user_profile_add_to_allies_btn"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

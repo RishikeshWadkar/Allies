@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 
 class UserDao {
 
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     val userCollection = db.collection("users")
 
     fun addUser(user: User){

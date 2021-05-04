@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.snackbar.Snackbar
@@ -82,6 +83,11 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
                 mViewModel.dismissDialog()
             }
         }
+    }
+
+    override fun onProfileClickListener(fromUid: String, toUid: String) {
+        val action = NotificationsViewPagerFragmentDirections.actionNotificationsViewPagerFragmentToUserProfileFragment(fromUid)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun onStop() {
