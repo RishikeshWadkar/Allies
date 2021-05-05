@@ -129,7 +129,7 @@
     </fragment>
     <fragment
         android:id="@+id/chatWithUserFragment"
-        android:name="com.rishikeshwadkar.socialapp.ChatWithUserFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatWithUserFragment"
         android:label="fragment_chat_with_user"
         tools:layout="@layout/fragment_chat_with_user" >
         <argument

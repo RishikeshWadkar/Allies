@@ -17,4 +17,6 @@
     <color name="green">#38FF00</color>
     <color name="lightGray">#D7D7D7</color>
     <color name="darkGray">#4B4B4B</color>
+
+    <color name="youtubeDark">#212121</color>
 </resources>
