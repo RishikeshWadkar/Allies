@@ -39,7 +39,7 @@ class ChatUsersListFragment : Fragment(), ChatUsersListAdapter.OnUserClicked {
         setUpRecyclerView()
     }
 
-    fun setUpRecyclerView(){
+    private fun setUpRecyclerView(){
         val mThis = this
         GlobalScope.launch(Dispatchers.IO) {
             val currUser = usersDao.getUserById(Firebase.auth.currentUser!!.uid).await().toObject(User::class.java)!!
@@ -61,6 +61,11 @@ class ChatUsersListFragment : Fragment(), ChatUsersListAdapter.OnUserClicked {
                     Log.d("chatting", "array is null")
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setUpRecyclerView()
     }
 
     override fun onUserClicked(uid: String) {

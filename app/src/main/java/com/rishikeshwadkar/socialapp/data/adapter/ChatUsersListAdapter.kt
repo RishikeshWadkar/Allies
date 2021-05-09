@@ -12,11 +12,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.dao.ChatDao
+import com.rishikeshwadkar.socialapp.data.models.Chat
+import com.rishikeshwadkar.socialapp.data.models.ChatCreator
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.users_item_view.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class ChatUsersListAdapter(private val userArray: ArrayList<User>, val listener: OnUserClicked): RecyclerView.Adapter<ChatUsersListAdapter.ChatUsersViewHolder>() {
+class ChatUsersListAdapter(private val userArray: ArrayList<User>, private val listener: OnUserClicked): RecyclerView.Adapter<ChatUsersListAdapter.ChatUsersViewHolder>() {
+
+    val chatDao = ChatDao()
 
     class ChatUsersViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val userImage: ImageView = itemView.users_item_image

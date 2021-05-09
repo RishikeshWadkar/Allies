@@ -117,7 +117,7 @@
         android:id="@+id/chatAlliesUsersListFragment"
         android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatChatAlliesListFragment"
         android:label="fragment_chat_allies_users_list"
-        tools:layout="@layout/fragment_chat_allies_users_list" />
+        tools:layout="@layout/fragment_chat_chat_allies_list" />
     <fragment
         android:id="@+id/chatUsersListFragment"
         android:name="com.rishikeshwadkar.socialapp.fragments.chat.ChatUsersListFragment"

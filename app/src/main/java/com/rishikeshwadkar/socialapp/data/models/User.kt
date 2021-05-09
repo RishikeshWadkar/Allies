@@ -11,6 +11,5 @@ data class User(
         val userAllies: ArrayList<String> = ArrayList(),
         val userRequests: ArrayList<String> = ArrayList(),
         val userRequestSent: ArrayList<String> = ArrayList()
-
 )
 

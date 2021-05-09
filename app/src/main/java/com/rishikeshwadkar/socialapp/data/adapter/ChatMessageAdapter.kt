@@ -1,5 +1,8 @@
 package com.rishikeshwadkar.socialapp.data.adapter
 
+import android.app.Activity
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +17,12 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.Utils
 import com.rishikeshwadkar.socialapp.data.models.Chat
 import kotlinx.android.synthetic.main.chat_message_item_view.view.*
+import kotlinx.android.synthetic.main.fragment_chat_with_user.*
 
-class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>) :
+class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>,val context: Context) :
     FirestoreRecyclerAdapter<Chat, ChatMessageAdapter.ChatMessageViewHolder>(options) {
+
+    private var mItemCounter = 0
 
     class ChatMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val sendingBox: TextView = itemView.sending_text_box
@@ -27,10 +33,15 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {
-        return ChatMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.chat_message_item_view, parent, false))
+        val viewHolder = ChatMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.chat_message_item_view, parent, false))
+
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ChatMessageViewHolder, position: Int, model: Chat) {
+
+        val mActivity = context as Activity
+
         if (model.from == Firebase.auth.currentUser!!.uid){
             holder.sendingBox.visibility = View.VISIBLE
             holder.sendingTime.visibility = View.VISIBLE
@@ -40,6 +51,8 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>) :
 
             holder.sendingBox.text = model.message
             holder.sendingTime.text = Utils.getTimeAgo(model.msgTime)
+
+            goDown(mActivity)
         }
         else{
             holder.receivingBox.visibility = View.VISIBLE
@@ -50,6 +63,16 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>) :
 
             holder.receivingBox.text = model.message
             holder.receivingTime.text = Utils.getTimeAgo(model.msgTime)
+
+            goDown(mActivity)
+        }
+    }
+
+    fun goDown(activity: Activity){
+        Log.d("scrollChat", this.itemCount.toString())
+        if (this.itemCount != mItemCounter){
+            activity.chat_with_user_recycler_view.smoothScrollToPosition(this.itemCount-1)
+            mItemCounter = this.itemCount
         }
     }
 }
