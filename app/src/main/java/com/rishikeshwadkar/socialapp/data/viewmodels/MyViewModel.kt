@@ -202,7 +202,7 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
         ){ dialogInterface, which ->
                 dialogInterface.dismiss()
                 showDialog(context, "Removing")
-                context.user_profile_add_to_allies_btn.text = "Add to Allies"
+                context.user_profile_add_to_allies_btn?.text = "Add to Allies"
                 removeFromAllies(uid, likerUid, adapter, position)
 
         }.setNegativeButton(

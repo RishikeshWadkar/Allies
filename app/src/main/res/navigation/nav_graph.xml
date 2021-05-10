@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_myProfileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_alliesUserListFragment"
+            app:destination="@id/alliesUserListFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -72,6 +75,9 @@
         <action
             android:id="@+id/action_userProfileFragment_to_chatWithUserFragment"
             app:destination="@id/chatWithUserFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_alliesUserListFragment"
+            app:destination="@id/alliesUserListFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationsViewPagerFragment"
@@ -135,5 +141,26 @@
         <argument
             android:name="oppositeUid"
             app:argType="string" />
+        <action
+            android:id="@+id/action_chatWithUserFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
-    </navigation>
+    <fragment
+        android:id="@+id/alliesUserListFragment"
+        android:name="com.rishikeshwadkar.socialapp.AlliesUserListFragment"
+        android:label="fragment_allies_user_list"
+        tools:layout="@layout/fragment_allies_user_list" >
+        <argument
+            android:name="uid"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_alliesUserListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_alliesUserListFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_alliesUserListFragment_to_userProfileFragment2"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+</navigation>

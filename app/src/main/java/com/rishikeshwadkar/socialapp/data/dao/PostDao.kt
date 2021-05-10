@@ -1,7 +1,11 @@
 package com.rishikeshwadkar.socialapp.data.dao
 
+import android.app.Activity
+import android.content.Context
 import android.util.Log
 import android.view.View
+import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
@@ -14,6 +18,7 @@ import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.models.Notification
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
+import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import com.rishikeshwadkar.socialapp.fragments.post.PostsFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,7 +33,7 @@ class PostDao {
     private val notificationsDao = NotificationsDao()
     private val userDao = UserDao()
 
-    fun addPost(text: String){
+    fun addPost(text: String, navController: NavController, viewModel: MyViewModel){
         val currentUserId = auth.currentUser!!.uid
         GlobalScope.launch(Dispatchers.IO) {
             val userDao = UserDao()
@@ -37,6 +42,10 @@ class PostDao {
 
             val post = Post(text, currentTime, user)
             postCollection.document().set(post)
+                    .addOnSuccessListener {
+                        viewModel.dismissDialog()
+                        navController.navigate(R.id.action_addPostFragment_to_postsFragment)
+                    }
         }
     }
 

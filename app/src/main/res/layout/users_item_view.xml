@@ -20,27 +20,33 @@
 
     <TextView
         android:id="@+id/users_item_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        android:text="Loading..."
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/users_item_email"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/users_item_image"
         app:layout_constraintTop_toTopOf="@+id/users_item_image"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/users_item_email"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Loading..."
         android:textColor="#000000"
-        android:textSize="14sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/users_item_image"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/users_item_image"
         app:layout_constraintTop_toBottomOf="@+id/users_item_name" />
 

@@ -25,14 +25,23 @@ class ChatDao {
     val chatMetadataCollection = db.collection("chat")
     val userDao = UserDao()
     
-    fun initializeChat(iFromUid: String, iToUid: String, chatCreator: ChatCreator, chat: Chat){
+    fun initializeChat(iFromUid: String, iToUid: String, chatCreator: ChatCreator, chat: Chat, context: Context){
         chatMetadataCollection.document("$iFromUid + $iToUid").set(chatCreator)
         chatMetadataCollection.document("$iFromUid + $iToUid").collection("messages")
             .document().set(chat)
+                .addOnSuccessListener {
+                    val activity: Activity = context as Activity
+                    activity.chat_with_user_msg_text.text = null
+                }
+
     }
 
     fun getWholeChatByBothID(iFromUid: String, iToUid: String): Task<DocumentSnapshot>{
         return chatMetadataCollection.document("$iFromUid + $iToUid").get()
+    }
+
+    fun getChatCreatorById(chatCreatorId: String): Task<DocumentSnapshot>{
+        return chatMetadataCollection.document(chatCreatorId).get()
     }
 
     fun sendMsg(iFromUid: String, iToUid: String, chatCreator: ChatCreator, chat: Chat, adapter: ChatMessageAdapter, context: Context){
@@ -47,7 +56,7 @@ class ChatDao {
                 activity.chat_with_user_recycler_view.smoothScrollToPosition(adapter.itemCount - 1)
                 activity.chat_with_user_msg_text.text = null
             }
-
+        chatMetadataCollection.document("$iFromUid + $iToUid").update("latestChat", chat)
     }
 
 }

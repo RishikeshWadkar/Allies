@@ -64,6 +64,16 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
             val action = UserProfileFragmentDirections.actionUserProfileFragmentToChatWithUserFragment(mNavArgs.uid)
             Navigation.findNavController(view).navigate(action)
         }
+
+        user_profile_allies_number_tv.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToAlliesUserListFragment(mNavArgs.uid)
+            Navigation.findNavController(view).navigate(action)
+        }
+
+        user_profile_allies_tv.setOnClickListener {
+            val action = UserProfileFragmentDirections.actionUserProfileFragmentToAlliesUserListFragment(mNavArgs.uid)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 
     private fun addToAllies() {
@@ -164,6 +174,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                         user_profile_msg_user.visibility = View.GONE
                     }
                 }
+                user_profile_allies_number_tv.text = oppositeUser.userAllies.size.toString()
             }
         }
     }

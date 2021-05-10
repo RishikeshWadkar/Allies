@@ -1,6 +1,6 @@
 package com.rishikeshwadkar.socialapp.data.models
 
 data class ChatCreator(
-        val initializedFrom: String = "",
-        val initializedTo: String = ""
+        val usersUid: ArrayList<String> = ArrayList(),
+        val latestChat: Chat = Chat()
 )

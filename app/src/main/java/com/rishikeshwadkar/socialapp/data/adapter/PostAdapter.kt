@@ -1,6 +1,7 @@
 package com.rishikeshwadkar.socialapp.data.adapter
 
 import android.animation.Animator
+import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,8 @@ import com.rishikeshwadkar.socialapp.data.Utils
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
+import kotlinx.android.synthetic.main.fragment_chat_with_user.*
+import kotlinx.android.synthetic.main.fragment_posts.*
 import kotlinx.android.synthetic.main.fragment_splash_screen.*
 import kotlinx.android.synthetic.main.item_view.view.*
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +32,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener: IPostAdapter) : FirestoreRecyclerAdapter<Post, PostAdapter.PostViewHolder>(options) {
+
+    private var mItemCounter = 0
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val userName: TextView = itemView.userName

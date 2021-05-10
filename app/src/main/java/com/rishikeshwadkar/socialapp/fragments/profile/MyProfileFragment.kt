@@ -47,6 +47,15 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         my_profile_edit_profile_btn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_myProfileFragment_to_editProfileFragment)
         }
+
+        my_profile_allies_number_tv.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionMyProfileFragmentToAlliesUserListFragment(Firebase.auth.currentUser!!.uid)
+            Navigation.findNavController(view).navigate(action)
+        }
+        my_profile_allies_tv.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionMyProfileFragmentToAlliesUserListFragment(Firebase.auth.currentUser!!.uid)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 
     private fun setupRecyclerView(){
@@ -72,6 +81,7 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     my_profile_user_name.text = currentUser.userDisplayName
                     val postsCount: Int = currentUser.userPostCount
                     my_profile_post_number_tv.text = postsCount.toString()
+                    my_profile_allies_number_tv.text = currentUser.userAllies.size.toString()
             }
         }
     }

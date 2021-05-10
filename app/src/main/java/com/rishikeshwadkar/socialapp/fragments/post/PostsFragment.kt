@@ -1,6 +1,9 @@
 package com.rishikeshwadkar.socialapp.fragments.post
 
+import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +28,6 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     private lateinit var query: Query
     private val postCollection = postDao.postCollection
     lateinit var mView: View
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +64,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     override fun onStop() {
        super.onStop()
-       //adapter?.stopListening()
+        adapter.stopListening()
     }
 
     override fun likeButtonListener(postID: String, position: Int) {

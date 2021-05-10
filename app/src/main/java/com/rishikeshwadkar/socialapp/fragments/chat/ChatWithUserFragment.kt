@@ -6,6 +6,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -58,7 +59,14 @@ class ChatWithUserFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
-
+        chat_with_user_image.setOnClickListener{
+            val action = ChatWithUserFragmentDirections.actionChatWithUserFragmentToUserProfileFragment(mArgs.oppositeUid)
+            Navigation.findNavController(view).navigate(action)
+        }
+        chat_with_user_name.setOnClickListener {
+            val action = ChatWithUserFragmentDirections.actionChatWithUserFragmentToUserProfileFragment(mArgs.oppositeUid)
+            Navigation.findNavController(view).navigate(action)
+        }
     }
 
     private fun setUpRecyclerView() {
@@ -81,8 +89,8 @@ class ChatWithUserFragment : Fragment() {
 
             withContext(Dispatchers.Main){
                 if (chatCreator != null){
-                    iFrom = chatCreator.initializedFrom
-                    iTo = chatCreator.initializedTo
+                    iFrom = chatCreator.usersUid[0]
+                    iTo = chatCreator.usersUid[1]
                     Log.d("Chatting", "$iFrom + $iTo")
 
                     val query: Query = chatDao.chatMetadataCollection
@@ -109,14 +117,6 @@ class ChatWithUserFragment : Fragment() {
         }
     }
 
-    private val handler: Handler = Handler()
-    private val runnable: Runnable = object : Runnable {
-        override fun run() {
-            adapter?.goDown(context as Activity)
-            handler.postDelayed(this, 100)
-        }
-    }
-
     private fun sendMsg() {
         if (chat_with_user_msg_text.text.isNotEmpty()){
 
@@ -124,18 +124,20 @@ class ChatWithUserFragment : Fragment() {
                 var chatCreator: ChatCreator?
                 val currentTime: Long = System.currentTimeMillis()
 
+                // getting chatCreator From Firebase
                 chatCreator = chatDao.getWholeChatByBothID(
                         Firebase.auth.currentUser!!.uid,
                         mArgs.oppositeUid
-                )
-                        .await().toObject(ChatCreator::class.java)
+                ).await().toObject(ChatCreator::class.java)
+
+                // Checking if it exits or not
                 if (chatCreator == null){
                     chatCreator = chatDao.getWholeChatByBothID(
                             mArgs.oppositeUid,
                             Firebase.auth.currentUser!!.uid
-                    )
-                            .await().toObject(ChatCreator::class.java)
+                    ).await().toObject(ChatCreator::class.java)
                 }
+
                 withContext(Dispatchers.Main){
                     if (chatCreator == null){
                         Log.d("Chatting", "not Initialized")
@@ -146,16 +148,19 @@ class ChatWithUserFragment : Fragment() {
                                 chat_with_user_msg_text.text.toString(),
                                 currentTime
                         )
-                        chatCreator = ChatCreator(
-                                Firebase.auth.currentUser!!.uid,
-                                mArgs.oppositeUid
-                        )
+
+                        var tempList: ArrayList<String> = ArrayList()
+                        tempList.add(Firebase.auth.currentUser!!.uid)
+                        tempList.add(mArgs.oppositeUid)
+
+                        chatCreator = ChatCreator(tempList, chat)
 
                         chatDao.initializeChat(
                                 Firebase.auth.currentUser!!.uid,
                                 mArgs.oppositeUid,
                                 chatCreator!!,
-                                chat
+                                chat,
+                                requireContext()
                         )
                         setUpRecyclerView()
                         if(adapter != null){
@@ -163,8 +168,8 @@ class ChatWithUserFragment : Fragment() {
                         }
                     }
                     else{
-                        iFrom = chatCreator!!.initializedFrom
-                        iTo = chatCreator!!.initializedTo
+                        iFrom = chatCreator!!.usersUid[0]
+                        iTo = chatCreator!!.usersUid[1]
 
                         val chat: Chat = Chat(
                                 Firebase.auth.currentUser!!.uid,
@@ -199,9 +204,18 @@ class ChatWithUserFragment : Fragment() {
         }
     }
 
+
+    private val handler: Handler = Handler()
+    private val runnable: Runnable = object : Runnable {
+        override fun run() {
+            adapter?.goDown(context as Activity)
+            handler.postDelayed(this, 100)
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        adapter?.stopListening()
+        setUpRecyclerView()
     }
 
     override fun onStop() {
