@@ -1,7 +1,6 @@
 package com.rishikeshwadkar.socialapp.fragments.notification
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +18,7 @@ import com.rishikeshwadkar.socialapp.data.adapter.NotificationsAdapter
 import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Notification
+import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_notifications.*
@@ -88,6 +88,26 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
     override fun onProfileClickListener(fromUid: String, toUid: String) {
         val action = NotificationsViewPagerFragmentDirections.actionNotificationsViewPagerFragmentToUserProfileFragment(fromUid)
         Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun onNotificationClickListener(notificationId: String) {
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val notification: Notification = notificationsDao.getNotificationById(notificationId).await()
+                .toObject(Notification::class.java)!!
+            withContext(Dispatchers.Main){
+                if (notification.postId != ""){
+                    val action = NotificationsViewPagerFragmentDirections.actionNotificationsViewPagerFragmentToSinglePostFragment(notification.postId)
+                    Navigation.findNavController(requireView()).navigate(action)
+                }
+            }
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupRecyclerView()
     }
 
     override fun onStop() {

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
@@ -15,6 +16,7 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Notification
+import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.notifications_item_view.view.*
 import kotlinx.coroutines.*
@@ -30,6 +32,7 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
         val userImage: ImageView = itemView.notification_profile_image
         var notificationText: TextView = itemView.notification_noti_text
         val notificationBtn: TextView = itemView.notification_button
+        val notificationItemView: ConstraintLayout = itemView.notification_item_view_layout
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationsViewHolder {
@@ -49,6 +52,13 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
                     listener.onProfileClickListener(notification!!.from, notification.to)
                 }
             }
+        }
+        viewHolder.notificationItemView.setOnClickListener {
+            listener.onNotificationClickListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
+        }
+
+        viewHolder.notificationText.setOnClickListener {
+            listener.onNotificationClickListener(snapshots.getSnapshot(viewHolder.adapterPosition).id)
         }
         return viewHolder
     }
@@ -98,5 +108,6 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
     interface NotificationListener{
         fun onNotificationButtonClickListener(notificationId: String, position: Int)
         fun onProfileClickListener(fromUid: String, toUid: String)
+        fun onNotificationClickListener(notificationId: String)
     }
 }

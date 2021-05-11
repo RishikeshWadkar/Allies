@@ -93,12 +93,19 @@
         <action
             android:id="@+id/action_notificationsViewPagerFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_notificationsViewPagerFragment_to_singlePostFragment"
+            app:destination="@id/singlePostFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment2"
         android:name="com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment"
         android:label="fragment_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_notificationsFragment2_to_singlePostFragment"
+            app:destination="@id/singlePostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/friendRequestsFragment"
         android:name="com.rishikeshwadkar.socialapp.fragments.notification.SentRequestPendingFragment"
@@ -162,5 +169,26 @@
         <action
             android:id="@+id/action_alliesUserListFragment_to_userProfileFragment2"
             app:destination="@id/userProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alliesPostFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.post.AlliesPostFragment"
+        android:label="fragment_allies_post"
+        tools:layout="@layout/fragment_allies_post" >
+        <action
+            android:id="@+id/action_alliesPostFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
+        <action
+            android:id="@+id/action_alliesPostFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/singlePostFragment"
+        android:name="com.rishikeshwadkar.socialapp.SinglePostFragment"
+        android:label="fragment_single_post"
+        tools:layout="@layout/fragment_single_post" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
     </fragment>
 </navigation>

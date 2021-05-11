@@ -3,10 +3,7 @@ package com.rishikeshwadkar.socialapp.data.dao
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -19,6 +16,7 @@ import com.rishikeshwadkar.socialapp.data.models.Notification
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import com.rishikeshwadkar.socialapp.fragments.post.AlliesPostFragmentDirections
 import com.rishikeshwadkar.socialapp.fragments.post.PostsFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -49,27 +47,38 @@ class PostDao {
         }
     }
 
-    private fun getPostByID(postID: String): Task<DocumentSnapshot>{
+    fun getPostByID(postID: String): Task<DocumentSnapshot>{
         return postCollection.document(postID).get()
     }
 
-    fun getUserUidByPostId(postId: String, view: View){
+    fun goToUserByPostId(postId: String, navController: NavController, goFrom: String){
         GlobalScope.launch(Dispatchers.IO) {
             val post: Post = getPostByID(postId).await().toObject(Post::class.java)!!
             withContext(Dispatchers.Main){
                 Log.d("gettingUid",post.createdBy.uid)
-                if(post.createdBy.uid == Firebase.auth.currentUser!!.uid)
-                    Navigation.findNavController(view).navigate(R.id.action_postsFragment_to_myProfileFragment)
+                if(post.createdBy.uid == Firebase.auth.currentUser!!.uid){
+                    if (goFrom == "post")
+                        navController.navigate(R.id.action_postsFragment_to_myProfileFragment)
+                    else if (goFrom == "allies")
+                        navController.navigate(R.id.action_alliesPostFragment_to_myProfileFragment)
+                }
                 else{
-                    val action = PostsFragmentDirections.actionPostsFragmentToUserProfileFragment(post.createdBy.uid)
-                    Navigation.findNavController(view).navigate(action)
+                    if (goFrom == "post"){
+                        val action = PostsFragmentDirections.actionPostsFragmentToUserProfileFragment(post.createdBy.uid)
+                        navController.navigate(action)
+                    }
+                    else if (goFrom == "allies"){
+                        val action = AlliesPostFragmentDirections.actionAlliesPostFragmentToUserProfileFragment(post.createdBy.uid)
+                        navController.navigate(action)
+                    }
+
                 }
 
             }
         }
     }
 
-    fun updateLike(postID: String, adapter: PostAdapter, position: Int){
+    fun updateLike(postID: String, adapter: PostAdapter?, position: Int){
         GlobalScope.launch(Dispatchers.IO) {
             val post = getPostByID(postID).await().toObject(Post::class.java)
             val liked = post?.likedBy?.contains(Firebase.auth.uid)
@@ -108,7 +117,7 @@ class PostDao {
                 }
             }
             postCollection.document(postID).update("likedBy",post.likedBy).addOnSuccessListener {
-                adapter.notifyItemChanged(position)
+                adapter?.notifyItemChanged(position)
             }
         }
     }

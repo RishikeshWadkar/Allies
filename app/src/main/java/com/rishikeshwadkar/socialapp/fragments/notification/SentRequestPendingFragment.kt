@@ -84,6 +84,10 @@ class SentRequestPendingFragment : Fragment(), NotificationsAdapter.Notification
         Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun onNotificationClickListener(notificationId: String) {
+        // Do nothing
+    }
+
     override fun onStart() {
         super.onStart()
         setupRecyclerView()

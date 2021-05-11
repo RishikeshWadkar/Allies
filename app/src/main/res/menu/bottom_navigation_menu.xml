@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/chatViewPagerFragment"
-        android:icon="@drawable/bottom_navigation_selector_profile"
+        android:icon="@drawable/bottom_chat_selector"
         android:title="chat" />
 
     <item android:title="Add Post"
@@ -16,7 +16,8 @@
         android:icon="@drawable/bottom_navigation_selector_add_post"/>
 
     <item
-        android:icon="@drawable/bottom_navigation_selector_profile"
+        android:id="@+id/alliesPostFragment"
+        android:icon="@drawable/bottom_allies_selector"
         android:title="Allies" />
     <item
         android:id="@+id/myProfileFragment"

@@ -1,25 +1,29 @@
 package com.rishikeshwadkar.socialapp.fragments.post
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
 import com.rishikeshwadkar.socialapp.R
-import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
+import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import kotlinx.android.synthetic.main.fragment_posts.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
@@ -40,7 +44,6 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mView = view
-        setUpRecyclerView()
     }
 
     private fun setUpRecyclerView() {
@@ -48,7 +51,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
         GlobalScope.launch(Dispatchers.IO) {
             query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
             val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
-            adapter = PostAdapter(recyclerViewOptions,mThis)
+            adapter = PostAdapter(recyclerViewOptions, mThis)
             withContext(Dispatchers.Main){
                 postRecyclerView.adapter = adapter
                 postRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -72,6 +75,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
     }
 
     override fun userImageClickListener(postID: String) {
-        postDao.getUserUidByPostId(postID, mView)
+        val navController: NavController = Navigation.findNavController(requireView())
+        postDao.goToUserByPostId(postID, navController, "post")
     }
 }
