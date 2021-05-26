@@ -15,14 +15,22 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.Utils
+import com.rishikeshwadkar.socialapp.data.dao.ChatDao
 import com.rishikeshwadkar.socialapp.data.models.Chat
+import com.rishikeshwadkar.socialapp.data.models.ChatCreator
 import kotlinx.android.synthetic.main.chat_message_item_view.view.*
 import kotlinx.android.synthetic.main.fragment_chat_with_user.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
-class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>,val context: Context) :
+class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>, val context: Context, private val iFrom: String, private val iTo: String) :
     FirestoreRecyclerAdapter<Chat, ChatMessageAdapter.ChatMessageViewHolder>(options) {
 
     private var mItemCounter = 0
+    private var maxAdapterPosition = -1
+    private val chatDao: ChatDao = ChatDao()
+    private var previousViewHolder: ChatMessageViewHolder? = null
 
     class ChatMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val sendingBox: TextView = itemView.sending_text_box
@@ -30,6 +38,8 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>,val context: Co
 
         val receivingBox: TextView = itemView.receiving_text_box
         val receivingTime: TextView = itemView.receiving_text_time
+
+        val seenText: TextView = itemView.sending_seen_text
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {
@@ -52,7 +62,9 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>,val context: Co
             holder.sendingBox.text = model.message
             holder.sendingTime.text = Utils.getTimeAgo(model.msgTime)
 
+            updateAllSeen(snapshots.getSnapshot(holder.adapterPosition).id)
             goDown(mActivity)
+            setUpSeenText(holder, model)
         }
         else{
             holder.receivingBox.visibility = View.VISIBLE
@@ -64,7 +76,41 @@ class ChatMessageAdapter(options: FirestoreRecyclerOptions<Chat>,val context: Co
             holder.receivingBox.text = model.message
             holder.receivingTime.text = Utils.getTimeAgo(model.msgTime)
 
+            updateAllSeen(snapshots.getSnapshot(holder.adapterPosition).id)
             goDown(mActivity)
+        }
+    }
+
+    private fun updateAllSeen(chatId: String){
+        GlobalScope.launch {
+            val latestChat = chatDao.getChatCreatorById("$iFrom + $iTo").await().toObject(ChatCreator::class.java)!!
+
+            if (latestChat.latestChat.to == Firebase.auth.currentUser!!.uid){
+                Log.d("chatSeen", "its true ${latestChat.latestChat.to} == ${Firebase.auth.currentUser!!.uid}")
+                chatDao.chatMetadataCollection.document("$iFrom + $iTo").update("latestChat.seen", true)
+                chatDao.chatMetadataCollection.document("$iFrom + $iTo")
+                        .collection("messages").document(chatId).update("seen", true)
+            }
+            else{
+                Log.d("chatSeen", "its false")
+            }
+        }
+    }
+
+    private fun setUpSeenText(viewHolder: ChatMessageViewHolder, model: Chat){
+        if (model.seen && maxAdapterPosition <= viewHolder.adapterPosition){
+            viewHolder.seenText.visibility = View.VISIBLE
+
+            if (previousViewHolder != null){
+                if (previousViewHolder != viewHolder){
+                    Log.d("chatSeenGone", "GONE")
+                    previousViewHolder?.seenText?.visibility = View.GONE
+                }
+            }
+
+            Log.d("chatSeenGone", "NOT GONE")
+            previousViewHolder = viewHolder
+            maxAdapterPosition = viewHolder.adapterPosition
         }
     }
 

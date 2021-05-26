@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -74,14 +75,14 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     //Log.d("mQuery", recyclerViewOptions.snapshots.getSnapshot(0).id)
                     adapter = PostAdapter(recyclerViewOptions, mThis)
                     adapter!!.startListening()
-                    my_profile_recycler_view.adapter = adapter
-                    my_profile_recycler_view.layoutManager = LinearLayoutManager(context)
+                    my_profile_recycler_view?.adapter = adapter
+                    my_profile_recycler_view?.layoutManager = LinearLayoutManager(context)
 
                     // Recycler View Done
-                    my_profile_user_name.text = currentUser.userDisplayName
+                    my_profile_user_name?.text = currentUser.userDisplayName
                     val postsCount: Int = currentUser.userPostCount
-                    my_profile_post_number_tv.text = postsCount.toString()
-                    my_profile_allies_number_tv.text = currentUser.userAllies.size.toString()
+                    my_profile_post_number_tv?.text = postsCount.toString()
+                    my_profile_allies_number_tv?.text = currentUser.userAllies.size.toString()
             }
         }
     }

@@ -4,5 +4,6 @@ data class Chat(
         val from: String = "",
         val to: String = "",
         val message: String = "",
-        val msgTime: Long = 0L
+        val msgTime: Long = 0L,
+        val seen: Boolean = false
 )

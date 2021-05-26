@@ -104,7 +104,7 @@ class ChatWithUserFragment : Fragment() {
                             Chat::class.java
                     ).build()
 
-                    adapter = ChatMessageAdapter(options, requireContext())
+                    adapter = ChatMessageAdapter(options, requireContext(), iFrom, iTo)
                     chat_with_user_recycler_view.adapter = adapter
                     val llm = LinearLayoutManager(requireContext())
                     llm.stackFromEnd = true

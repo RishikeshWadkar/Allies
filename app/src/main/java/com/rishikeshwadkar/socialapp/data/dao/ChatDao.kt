@@ -59,4 +59,8 @@ class ChatDao {
         chatMetadataCollection.document("$iFromUid + $iToUid").update("latestChat", chat)
     }
 
+    fun updateSeen(iFromUid: String, iToUid: String){
+        chatMetadataCollection.document("$iFromUid + $iToUid").update("latestChat.seen", true)
+    }
+
 }

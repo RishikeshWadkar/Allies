@@ -1,5 +1,6 @@
 package com.rishikeshwadkar.socialapp.data.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class ChatChatUsersListAdapter(options: FirestoreRecyclerOptions<ChatCreator>, p
         val userLatestMessage: TextView = itemView.users_item_email
         var userUid: String = ""
         val layoutView: ConstraintLayout = itemView.userItemViewConstraintLayout
+        val redBadge: ImageView = itemView.user_item_red_badge
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatChatViewHolder {
@@ -55,6 +57,15 @@ class ChatChatUsersListAdapter(options: FirestoreRecyclerOptions<ChatCreator>, p
                 Glide.with(holder.userImage).load(oppositeUser.userImage).into(holder.userImage)
                 holder.userLatestMessage.text = model.latestChat.message
                 holder.userUid = oppositeUserId
+
+                if ( (!model.latestChat.seen) && model.latestChat.to == Firebase.auth.currentUser!!.uid){
+                    holder.userLatestMessage.typeface = Typeface.DEFAULT_BOLD
+                    holder.redBadge.visibility = View.VISIBLE
+                }
+                else{
+                    holder.userLatestMessage.typeface = Typeface.DEFAULT
+                    holder.redBadge.visibility = View.GONE
+                }
             }
         }
     }

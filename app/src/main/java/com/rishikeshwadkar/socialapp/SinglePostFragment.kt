@@ -61,10 +61,10 @@ class SinglePostFragment : Fragment() {
                 .toObject(Post::class.java)!!
 
             withContext(Dispatchers.Main){
-                single_post_user_name.text = post.createdBy.userDisplayName
-                single_post_created_at.text = Utils.getTimeAgo(post.currentTime)
-                single_post_post_text.text = post.text
-                single_post_like_count.text = post.likedBy.size.toString()
+                single_post_user_name?.text = post.createdBy.userDisplayName
+                single_post_created_at?.text = Utils.getTimeAgo(post.currentTime)
+                single_post_post_text?.text = post.text
+                single_post_like_count?.text = post.likedBy.size.toString()
 
                 // Profile photo
                 Glide.with(single_post_user_image).load(post.createdBy.userImage).circleCrop().into(single_post_user_image)
