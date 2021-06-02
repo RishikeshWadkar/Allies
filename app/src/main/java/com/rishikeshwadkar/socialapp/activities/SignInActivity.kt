@@ -51,7 +51,9 @@ class SignInActivity : AppCompatActivity() {
                         Log.d("userVerify", user!!.userPassword)
                         updateUI()
                     }
-                    else
+                    else if (user!!.userPassword.isEmpty()){
+                        navController.navigate(R.id.setupPassword)
+                    }
                         Log.d("userVerify", "$user")
                 }
             }

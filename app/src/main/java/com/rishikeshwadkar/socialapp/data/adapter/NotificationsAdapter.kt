@@ -65,8 +65,15 @@ class NotificationsAdapter(options: FirestoreRecyclerOptions<Notification>, priv
 
     override fun onBindViewHolder(holder: NotificationsViewHolder, position: Int, model: Notification) {
         holder.notificationText.text = model.notificationText
-
+        setRed(model, holder)
         dataSetter(model, holder)
+    }
+
+    private fun setRed(model: Notification, holder: NotificationsViewHolder) {
+        if (model.to == Firebase.auth.currentUser!!.uid){
+            val notificationId = snapshots.getSnapshot(holder.adapterPosition).id
+            notificationsDao.notificationsCollection.document(notificationId).update("seen", true)
+        }
     }
 
     private fun dataSetter(model: Notification, holder: NotificationsViewHolder){

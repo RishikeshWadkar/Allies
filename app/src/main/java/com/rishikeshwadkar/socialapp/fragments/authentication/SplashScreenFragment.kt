@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import kotlinx.android.synthetic.main.fragment_splash_screen.*
 
 class SplashScreenFragment : Fragment() {
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,7 +31,10 @@ class SplashScreenFragment : Fragment() {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_chooseFragment)
+                if (Firebase.auth.currentUser == null)
+                    Navigation.findNavController(view).navigate(R.id.action_splashScreenFragment_to_chooseFragment)
+                else
+                    lottieAnimationView.playAnimation()
             }
 
             override fun onAnimationCancel(animation: Animator?) {

@@ -13,15 +13,10 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.ChatChatUsersListAdapter
-import com.rishikeshwadkar.socialapp.data.adapter.ChatMessageAdapter
 import com.rishikeshwadkar.socialapp.data.dao.ChatDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.ChatCreator
 import kotlinx.android.synthetic.main.fragment_chat_chat_allies_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class ChatChatAlliesListFragment : Fragment(), ChatChatUsersListAdapter.UserClickInterface {
 

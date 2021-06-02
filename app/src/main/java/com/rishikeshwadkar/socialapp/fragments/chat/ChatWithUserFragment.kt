@@ -22,11 +22,9 @@ import com.rishikeshwadkar.socialapp.data.models.Chat
 import com.rishikeshwadkar.socialapp.data.models.ChatCreator
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.fragment_chat_with_user.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
+import java.lang.Runnable
 
 class ChatWithUserFragment : Fragment() {
 
@@ -71,7 +69,9 @@ class ChatWithUserFragment : Fragment() {
 
     private fun setUpRecyclerView() {
 
-        GlobalScope.launch(Dispatchers.IO) {
+        val mThis = this
+
+        CoroutineScope(Dispatchers.IO).launch {
 
             var chatCreator: ChatCreator?
             chatCreator = chatDao.getWholeChatByBothID(
@@ -88,7 +88,7 @@ class ChatWithUserFragment : Fragment() {
             }
 
             withContext(Dispatchers.Main){
-                if (chatCreator != null){
+                if (chatCreator != null && mThis.isVisible){
                     iFrom = chatCreator.usersUid[0]
                     iTo = chatCreator.usersUid[1]
                     Log.d("Chatting", "$iFrom + $iTo")
@@ -120,7 +120,9 @@ class ChatWithUserFragment : Fragment() {
     private fun sendMsg() {
         if (chat_with_user_msg_text.text.isNotEmpty()){
 
-            GlobalScope.launch(Dispatchers.IO) {
+            val mThis = this
+
+            CoroutineScope(Dispatchers.IO).launch {
                 var chatCreator: ChatCreator?
                 val currentTime: Long = System.currentTimeMillis()
 
@@ -139,7 +141,7 @@ class ChatWithUserFragment : Fragment() {
                 }
 
                 withContext(Dispatchers.Main){
-                    if (chatCreator == null){
+                    if (chatCreator == null && mThis.isVisible){
                         Log.d("Chatting", "not Initialized")
 
                         val chat: Chat = Chat(
@@ -195,11 +197,16 @@ class ChatWithUserFragment : Fragment() {
     }
 
     private fun setToolBarData() {
-        GlobalScope.launch(Dispatchers.IO) {
+
+        val mThis = this
+
+        CoroutineScope(Dispatchers.IO).launch {
             val user: User = userDao.getUserById(mArgs.oppositeUid).await().toObject(User::class.java)!!
             withContext(Dispatchers.Main){
-                chat_with_user_name.text = user.userDisplayName
-                Glide.with(chat_with_user_image).load(user.userImage).into(chat_with_user_image)
+                if (mThis.isVisible){
+                    chat_with_user_name.text = user.userDisplayName
+                    Glide.with(chat_with_user_image).load(user.userImage).into(chat_with_user_image)
+                }
             }
         }
     }

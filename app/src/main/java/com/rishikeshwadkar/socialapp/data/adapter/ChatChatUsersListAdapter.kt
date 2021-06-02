@@ -18,11 +18,8 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.ChatCreator
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.users_item_view.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ChatChatUsersListAdapter(options: FirestoreRecyclerOptions<ChatCreator>, private val listener: UserClickInterface)
     : FirestoreRecyclerAdapter<ChatCreator, ChatChatUsersListAdapter.ChatChatViewHolder>(options) {
@@ -47,7 +44,7 @@ class ChatChatUsersListAdapter(options: FirestoreRecyclerOptions<ChatCreator>, p
     }
 
     override fun onBindViewHolder(holder: ChatChatViewHolder, position: Int, model: ChatCreator) {
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             var oppositeUserId = if (model.usersUid[0] == Firebase.auth.currentUser!!.uid) model.usersUid[1]
             else model.usersUid[0]
             val oppositeUser: User = userDao.getUserById(oppositeUserId).await().toObject(User::class.java)!!

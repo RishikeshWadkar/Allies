@@ -18,11 +18,8 @@ import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import com.rishikeshwadkar.socialapp.data.models.Notification
 import kotlinx.android.synthetic.main.fragment_sent_request_pending.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class SentRequestPendingFragment : Fragment(), NotificationsAdapter.NotificationListener {
 
@@ -58,13 +55,13 @@ class SentRequestPendingFragment : Fragment(), NotificationsAdapter.Notification
     }
 
     override fun onNotificationButtonClickListener(notificationId: String, position: Int) {
-
-        GlobalScope.launch(Dispatchers.IO) {
+        val mThis = this
+        CoroutineScope(Dispatchers.IO).launch {
             val notification: Notification = notificationsDao.getNotificationById(notificationId)
                     .await().toObject(Notification::class.java)!!
             withContext(Dispatchers.Main){
-
-                mViewModel.setUpMaterialDialogRemoveRequest(
+                if (mThis.isVisible){
+                    mViewModel.setUpMaterialDialogRemoveRequest(
                         requireContext(),
                         Firebase.auth.currentUser!!.uid,
                         notification.to,
@@ -74,7 +71,8 @@ class SentRequestPendingFragment : Fragment(), NotificationsAdapter.Notification
                         "Are you sure?",
                         "Remove",
                         "Removing"
-                        )
+                    )
+                }
             }
         }
     }

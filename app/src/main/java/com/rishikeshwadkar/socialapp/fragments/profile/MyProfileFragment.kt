@@ -21,11 +21,8 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.fragment_my_profile.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
@@ -62,13 +59,14 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     private fun setupRecyclerView(){
         val mThis = this
 
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             currentUser = userDao.getUserById(Firebase.auth.currentUser!!.uid).await().toObject(User::class.java)!!
 
             withContext(Dispatchers.Main) {
+                if (mThis.isVisible){
                     Glide.with(my_profile_image_view).load(currentUser.userImage).circleCrop().into(my_profile_image_view)
                     val query: Query = postDao.postCollection
-                            .whereEqualTo("createdBy.uid", Firebase.auth.currentUser!!.uid)
+                        .whereEqualTo("createdBy.uid", Firebase.auth.currentUser!!.uid)
                         .orderBy("currentTime", Query.Direction.DESCENDING)
 
                     val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
@@ -83,6 +81,7 @@ class MyProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     val postsCount: Int = currentUser.userPostCount
                     my_profile_post_number_tv?.text = postsCount.toString()
                     my_profile_allies_number_tv?.text = currentUser.userAllies.size.toString()
+                }
             }
         }
     }

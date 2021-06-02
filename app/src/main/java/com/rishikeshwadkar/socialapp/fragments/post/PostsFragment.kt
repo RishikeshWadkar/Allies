@@ -19,10 +19,7 @@ import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import kotlinx.android.synthetic.main.fragment_posts.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
@@ -48,7 +45,7 @@ class PostsFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private fun setUpRecyclerView() {
         val mThis = this
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             query = postCollection.orderBy("currentTime", Query.Direction.DESCENDING)
             val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()
             adapter = PostAdapter(recyclerViewOptions, mThis)

@@ -6,5 +6,6 @@ data class Notification(
         val to: String = "",
         val notificationText: String = "",
         val currentTime: Long = 0L,
-        val postId: String = ""
+        val postId: String = "",
+        val seen: Boolean = false
 )

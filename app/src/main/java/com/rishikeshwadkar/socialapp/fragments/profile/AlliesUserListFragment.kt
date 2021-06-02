@@ -1,4 +1,4 @@
-package com.rishikeshwadkar.socialapp
+package com.rishikeshwadkar.socialapp.fragments.profile
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,16 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.AlliesUserListAdapter
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_allies_user_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class AlliesUserListFragment : Fragment(), AlliesUserListAdapter.AlliesUserListInterface {
 
@@ -53,7 +51,7 @@ class AlliesUserListFragment : Fragment(), AlliesUserListAdapter.AlliesUserListI
 
     override fun onRemoveBtnClickListener(uid: String) {
 
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             val model: User = userDao.getUserById(uid).await().toObject(User::class.java)!!
             withContext(Dispatchers.Main){
                 when {

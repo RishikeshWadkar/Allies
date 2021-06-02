@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AlliesUserListFragment">
+    tools:context=".fragments.profile.AlliesUserListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allies_users_list_recyclerView"

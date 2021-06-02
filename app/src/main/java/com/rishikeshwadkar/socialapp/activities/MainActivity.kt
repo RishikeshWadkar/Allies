@@ -3,6 +3,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,12 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.FirebaseMessagingKtxRegistrar
 import com.rishikeshwadkar.socialapp.R
+import com.rishikeshwadkar.socialapp.data.dao.ChatDao
+import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
 import com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_notifications_view_pager.*
@@ -22,10 +28,14 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
     private var tempBool: Boolean = true
+    private val notificationsDao = NotificationsDao()
+    private val chatDao = ChatDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
         navController = Navigation.findNavController(this, R.id.navHost)
@@ -69,6 +79,60 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
             }
         }
     }
+
+    private val handler: Handler = Handler()
+    private val runnable: Runnable = object : Runnable {
+        override fun run() {
+            setNotificationDot()
+            setChatDot()
+            handler.postDelayed(this, 100)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        handler.postDelayed(runnable, 100)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        handler.removeCallbacks(runnable)
+    }
+
+    private fun setChatDot() {
+        chatDao.chatMetadataCollection.whereEqualTo("latestChat.to", Firebase.auth.currentUser!!.uid)
+                .whereEqualTo("latestChat.seen", false)
+                .get().addOnSuccessListener {
+                    val badge = bottomNavigationView.getOrCreateBadge(R.id.chatViewPagerFragment)
+                    var tNum = 0
+                    for (document in it){
+                        tNum++
+                        badge.isVisible = true
+                        badge.number = tNum
+                    }
+                    if (it.isEmpty){
+                        badge.number = 0
+                        badge.isVisible = false
+                    }
+                }
+    }
+
+    private fun setNotificationDot() {
+        notificationsDao.notificationsCollection.whereEqualTo("to", Firebase.auth.currentUser!!.uid)
+                .whereEqualTo("seen", false)
+                .get().addOnSuccessListener {
+                    for (document in it){
+                        val notificationBtn = toolbar2.menu.findItem(R.id.notificationFragment)
+                        notificationBtn.setIcon(R.drawable.ic_notification_unread)
+                        break
+                    }
+                    if (it.isEmpty){
+                        val notificationBtn = toolbar2.menu.findItem(R.id.notificationFragment)
+                        notificationBtn.setIcon(R.drawable.ic_no_notification_unselected)
+                    }
+                }
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(

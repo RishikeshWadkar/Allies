@@ -28,11 +28,8 @@ import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_user_profile.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
@@ -79,7 +76,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
     private fun addToAllies() {
         if (user_profile_add_to_allies_btn.text == "Add to Allies"){
             userDao.addRequest(Firebase.auth.currentUser!!.uid, mNavArgs.uid,null, 0)
-            GlobalScope.launch(Dispatchers.IO) {
+            CoroutineScope(Dispatchers.IO).launch {
                 val user: User = userDao.getUserById(Firebase.auth.currentUser!!.uid)
                         .await().toObject(User::class.java)!!
                 val currentTime: Long = System.currentTimeMillis()
@@ -131,21 +128,23 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private fun setupData() {
         val mThis = this
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             val user: User = userDao.getUserById(mNavArgs.uid).await().toObject(User::class.java)!!
             val query: Query = postDao.postCollection.whereEqualTo("createdBy.uid", user.uid)
                 .orderBy("currentTime", Query.Direction.DESCENDING)
             val recyclerViewOptions = FirestoreRecyclerOptions.Builder<Post>().setQuery(query,Post::class.java).build()
 
             withContext(Dispatchers.Main){
-                user_profile_user_name.text = user.userDisplayName
-                Glide.with(user_profile_image_view).load(user.userImage).circleCrop().into(user_profile_image_view)
-                user_profile_post_number_tv.text = user.userPostCount.toString()
+                if (mThis.isVisible){
+                    user_profile_user_name.text = user.userDisplayName
+                    Glide.with(user_profile_image_view).load(user.userImage).circleCrop().into(user_profile_image_view)
+                    user_profile_post_number_tv.text = user.userPostCount.toString()
 
-                adapter = PostAdapter(recyclerViewOptions, mThis)
-                user_profile_recycler_view.adapter = adapter
-                user_profile_recycler_view.layoutManager = LinearLayoutManager(requireContext())
-                adapter!!.startListening()
+                    adapter = PostAdapter(recyclerViewOptions, mThis)
+                    user_profile_recycler_view.adapter = adapter
+                    user_profile_recycler_view.layoutManager = LinearLayoutManager(requireContext())
+                    adapter!!.startListening()
+                }
             }
         }
     }

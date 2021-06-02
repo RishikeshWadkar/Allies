@@ -22,11 +22,8 @@ import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_notifications.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListener {
 
@@ -48,39 +45,44 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
 
     private fun setupRecyclerView() {
         val mThis = this
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             val query: Query = notificationsDao.notificationsCollection.whereEqualTo("to", Firebase.auth.currentUser!!.uid)
                     .orderBy("currentTime", Query.Direction.DESCENDING)
 
             val recyclerOptions = FirestoreRecyclerOptions.Builder<Notification>().setQuery(query,Notification::class.java).build()
             withContext(Dispatchers.Main){
-                adapter = NotificationsAdapter(recyclerOptions, mThis)
-                notifications_recycler_view.adapter = adapter
-                notifications_recycler_view.layoutManager = LinearLayoutManager(context)
-                adapter.startListening()
+                if (mThis.isVisible){
+                    adapter = NotificationsAdapter(recyclerOptions, mThis)
+                    notifications_recycler_view.adapter = adapter
+                    notifications_recycler_view.layoutManager = LinearLayoutManager(context)
+                    adapter.startListening()
+                }
             }
         }
     }
 
     override fun onNotificationButtonClickListener(notificationId: String, position: Int) {
         mViewModel.showDialog(requireContext(), "Loading")
-        GlobalScope.launch(Dispatchers.IO) {
+        val mThis = this
+        CoroutineScope(Dispatchers.IO).launch {
             val notification: Notification = notificationsDao.getNotificationById(notificationId)
                     .await().toObject(Notification::class.java)!!
             val fromUser: User = userDao.getUserById(notification.from)
                     .await().toObject(User::class.java)!!
 
             withContext(Dispatchers.Main){
-                userDao.addToAllies(notification.to, notification.from)
-                notificationsDao.removeNotification(notificationId)
-                val snackbar = Snackbar.make(
+                if (mThis.isVisible){
+                    userDao.addToAllies(notification.to, notification.from)
+                    notificationsDao.removeNotification(notificationId)
+                    val snackbar = Snackbar.make(
                         notificationFragmentConstraintLayout,
                         "${fromUser.userDisplayName} is now your Allies",
                         Snackbar.LENGTH_LONG
-                        )
-                snackbar.setAction("Action", null)
-                snackbar.show()
-                mViewModel.dismissDialog()
+                    )
+                    snackbar.setAction("Action", null)
+                    snackbar.show()
+                    mViewModel.dismissDialog()
+                }
             }
         }
     }
@@ -91,12 +93,12 @@ class NotificationsFragment : Fragment(), NotificationsAdapter.NotificationListe
     }
 
     override fun onNotificationClickListener(notificationId: String) {
-
-        GlobalScope.launch(Dispatchers.IO) {
+        val mThis = this
+        CoroutineScope(Dispatchers.IO).launch {
             val notification: Notification = notificationsDao.getNotificationById(notificationId).await()
                 .toObject(Notification::class.java)!!
             withContext(Dispatchers.Main){
-                if (notification.postId != ""){
+                if (notification.postId != "" && mThis.isVisible){
                     val action = NotificationsViewPagerFragmentDirections.actionNotificationsViewPagerFragmentToSinglePostFragment(notification.postId)
                     Navigation.findNavController(requireView()).navigate(action)
                 }

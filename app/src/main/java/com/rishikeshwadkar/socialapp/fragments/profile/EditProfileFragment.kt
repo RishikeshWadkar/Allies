@@ -30,11 +30,8 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.io.IOException
 
 
@@ -67,15 +64,18 @@ class EditProfileFragment : Fragment() {
 
     private fun setData() {
         // setting up the user image and password
-        GlobalScope.launch(Dispatchers.IO) {
+        val mThis = this
+        CoroutineScope(Dispatchers.IO).launch {
             val user: User = userDao.getUserById(currentUser!!.uid).await().toObject(User::class.java)!!
             withContext(Dispatchers.Main){
-                Glide.with(edit_profile_user_image).load(user.userImage).circleCrop().into(edit_profile_user_image)
-                edit_profile_password_text.setText(user.userPassword)
-                if(user.userPhoneNo != null)
-                    edit_profile_phone_text.setText(user.userPhoneNo)
-                else
-                    edit_profile_phone_text.requestFocus()
+                if (mThis.isVisible){
+                    Glide.with(edit_profile_user_image).load(user.userImage).circleCrop().into(edit_profile_user_image)
+                    edit_profile_password_text.setText(user.userPassword)
+                    if(user.userPhoneNo != null)
+                        edit_profile_phone_text.setText(user.userPhoneNo)
+                    else
+                        edit_profile_phone_text.requestFocus()
+                }
             }
         }
         edit_profile_name_text.setText(currentUser!!.displayName)

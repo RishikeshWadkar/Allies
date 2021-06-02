@@ -154,7 +154,7 @@
     </fragment>
     <fragment
         android:id="@+id/alliesUserListFragment"
-        android:name="com.rishikeshwadkar.socialapp.AlliesUserListFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.profile.AlliesUserListFragment"
         android:label="fragment_allies_user_list"
         tools:layout="@layout/fragment_allies_user_list" >
         <argument
@@ -184,7 +184,7 @@
     </fragment>
     <fragment
         android:id="@+id/singlePostFragment"
-        android:name="com.rishikeshwadkar.socialapp.SinglePostFragment"
+        android:name="com.rishikeshwadkar.socialapp.fragments.post.SinglePostFragment"
         android:label="fragment_single_post"
         tools:layout="@layout/fragment_single_post" >
         <argument

@@ -62,7 +62,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
-    compile 'com.google.firebase:firebase-storage:19.2.2'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics'
+    compile 'com.google.firebase:firebase-storage:20.0.0'
+
 
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 

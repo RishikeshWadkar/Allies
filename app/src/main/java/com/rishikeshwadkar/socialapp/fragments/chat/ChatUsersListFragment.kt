@@ -15,11 +15,8 @@ import com.rishikeshwadkar.socialapp.data.adapter.ChatUsersListAdapter
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.fragment_chat_users_list.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class ChatUsersListFragment : Fragment(), ChatUsersListAdapter.OnUserClicked {
 
@@ -41,7 +38,7 @@ class ChatUsersListFragment : Fragment(), ChatUsersListAdapter.OnUserClicked {
 
     private fun setUpRecyclerView(){
         val mThis = this
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch() {
             val currUser = usersDao.getUserById(Firebase.auth.currentUser!!.uid).await().toObject(User::class.java)!!
             var userArrayList: ArrayList<User> = ArrayList()
 
@@ -51,7 +48,7 @@ class ChatUsersListFragment : Fragment(), ChatUsersListAdapter.OnUserClicked {
                 userArrayList.add(user)
             }
             withContext(Dispatchers.Main){
-                if(userArrayList.isNotEmpty()){
+                if(userArrayList.isNotEmpty() && mThis.isVisible){
                     Log.d("chatting", "not null ${userArrayList[0]}")
                     adapter = ChatUsersListAdapter(userArrayList, mThis)
                     chat_allies_users_recycler_view.adapter = adapter
