@@ -49,10 +49,12 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
             if(destination.id == R.id.notificationsViewPagerFragment){
                 notificationBtn.setIcon( R.drawable.ic_notification_selected)
                 tempBool = false
+                handler.removeCallbacks(runnable)
             }
             else{
                 notificationBtn.setIcon(R.drawable.ic_no_notification_unselected)
                 tempBool = true
+                handler.removeCallbacks(runnable)
             }
 
             if (destination.id == R.id.chatWithUserFragment){

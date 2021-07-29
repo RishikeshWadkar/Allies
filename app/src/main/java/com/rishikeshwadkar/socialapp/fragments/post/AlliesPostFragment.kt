@@ -14,13 +14,21 @@ import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.adapter.PostAdapter
 import com.rishikeshwadkar.socialapp.data.dao.PostDao
+import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Post
+import com.rishikeshwadkar.socialapp.data.models.User
 import kotlinx.android.synthetic.main.fragment_allies_post.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class AlliesPostFragment : Fragment(), PostAdapter.IPostAdapter {
 
     lateinit var adapter: PostAdapter
     private val postDao = PostDao()
+    private val userDao: UserDao = UserDao()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,6 +42,7 @@ class AlliesPostFragment : Fragment(), PostAdapter.IPostAdapter {
     }
 
     private fun setUpRecyclerView() {
+
         val query = postDao.postCollection.whereArrayContains("createdBy.userAllies", Firebase.auth.currentUser!!.uid)
             .orderBy("currentTime", Query.Direction.DESCENDING)
         val options = FirestoreRecyclerOptions.Builder<Post>().setQuery(query, Post::class.java).build()

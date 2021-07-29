@@ -9,11 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import kotlinx.android.synthetic.main.fragment_add_post.*
 import kotlinx.android.synthetic.main.fragment_setup_password.*
 
 class SetupPassword : Fragment() {
@@ -51,15 +53,29 @@ class SetupPassword : Fragment() {
 
         confirm_submit_button.setOnClickListener {
             if( (confirm_enter_pass_text.length() < 8) || (confirm_enter_pass_text.text.toString() != confirm_confirm_pass_text.text.toString())){
-                if(confirm_enter_pass.boxStrokeColor == Color.RED)
+                if(confirm_enter_pass.boxStrokeColor == Color.RED){
+                    if (setupPasswordConstraintLayout != null){
+                    Snackbar.make(setupPasswordConstraintLayout, "At least 8 Characters...", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null).show()
+                    }
                     confirm_enter_pass.requestFocus()
-                else
-                    confirm_confirm_pass.requestFocus()
+                }
+                else{
+                    if (setupPasswordConstraintLayout != null) {
+                        Snackbar.make(
+                            setupPasswordConstraintLayout,
+                            "Passwords didn't match...",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .setAction("Action", null).show()
+                        confirm_confirm_pass.requestFocus()
+                    }
+                }
             }
             else{
                 Log.d("confirm", "clicked")
                 currentUser!!.updatePassword(password.toString())
-                Log.d("confirm", "${currentUser.displayName}")
+                Log.d("confirm", currentUser.displayName)
                 mViewModel.updateUIEmail(
                         currentUser.uid,
                         currentUser.displayName!!,

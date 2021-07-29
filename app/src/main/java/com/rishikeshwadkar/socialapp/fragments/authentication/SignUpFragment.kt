@@ -25,6 +25,7 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import kotlinx.android.synthetic.main.fragment_add_post.*
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -105,37 +106,66 @@ class SignUpFragment : Fragment() {
                                             var msg: String = it1
                                             if(it1 == "The email address is already in use by another account."){
                                                 msg = "email id already exists"
-                                                val snackbar = Snackbar.make(signUpConstraintLayout, msg,
-                                                        Snackbar.LENGTH_LONG).setAction("Sign in"){
-                                                    Navigation.findNavController(requireView()).navigate(R.id.action_signUpFragment_to_signinFragment)
+                                                if (signUpConstraintLayout != null) {
+                                                    val snackbar = Snackbar.make(
+                                                        signUpConstraintLayout, msg,
+                                                        Snackbar.LENGTH_LONG
+                                                    ).setAction("Sign in") {
+                                                        Navigation.findNavController(requireView())
+                                                            .navigate(R.id.action_signUpFragment_to_signinFragment)
+                                                    }
+                                                    snackbar.setTextColor(Color.WHITE)
+                                                    snackbar.setActionTextColor(Color.parseColor("#FFBB86FC"))
+                                                    snackbar.show()
                                                 }
-                                                snackbar.setTextColor(Color.WHITE)
-                                                snackbar.setActionTextColor(Color.parseColor("#FFBB86FC"))
-                                                snackbar.show()
 
                                             }
                                             else if(it1 == "The email address is badly formatted."){
                                                 sign_up_email_text.requestFocus()
-                                                msg = "Please enter a valid email address"
-                                                val snackbar = Snackbar.make(signUpConstraintLayout, msg,
-                                                        Snackbar.LENGTH_LONG).setAction("Action", null)
-                                                snackbar.setTextColor(Color.WHITE)
-                                                snackbar.show()
+                                                msg = "Please enter a valid email address..."
+                                                if (signUpConstraintLayout != null) {
+                                                    val snackbar = Snackbar.make(
+                                                        signUpConstraintLayout, msg,
+                                                        Snackbar.LENGTH_LONG
+                                                    ).setAction("Action", null)
+                                                    snackbar.setTextColor(Color.WHITE)
+                                                    snackbar.show()
+                                                }
                                             }
                                         }
                                     }
                                 }
                     }else{
-                        sign_up_password.helperText = "*Required"
-                        sign_up_password_text.requestFocus()
+                        if (signUpConstraintLayout != null) {
+                            Snackbar.make(
+                                signUpConstraintLayout,
+                                "Enter your password...",
+                                Snackbar.LENGTH_SHORT
+                            )
+                                .setAction("Action", null).show()
+                            sign_up_password.helperText = "*Required"
+                            sign_up_password_text.requestFocus()
+                        }
                     }
             } else{
-                sign_up_email.helperText = "*Required"
-                sign_up_email_text.requestFocus()
+                if (signUpConstraintLayout != null) {
+                    Snackbar.make(
+                        signUpConstraintLayout,
+                        "Enter your email...",
+                        Snackbar.LENGTH_SHORT
+                    )
+                        .setAction("Action", null).show()
+                    sign_up_email.helperText = "*Required"
+                    sign_up_email_text.requestFocus()
+                }
             }
         } else{
-            sign_up_name.helperText = "*Required"
-            sign_up_name_text.requestFocus()
+            if (signUpConstraintLayout != null) {
+                Snackbar.make(signUpConstraintLayout, "Enter your name...", Snackbar.LENGTH_SHORT)
+                    .setAction("Action", null).show()
+                sign_up_name.helperText = "*Required"
+                sign_up_name_text.requestFocus()
+            }
         }
     }
 

@@ -29,6 +29,7 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import kotlinx.android.synthetic.main.fragment_add_post.*
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -88,6 +89,10 @@ class EditProfileFragment : Fragment() {
         if(edit_profile_name_text.text?.isEmpty() == true){
             edit_profile_name.boxStrokeColor = Color.RED
             edit_profile_name_text.requestFocus()
+            if (edit_profile_fragment_constraint_layout != null){
+                Snackbar.make(edit_profile_fragment_constraint_layout, "Name should not be empty...", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            }
         }
         else if(edit_profile_password_text.text?.isEmpty() == true || edit_profile_password_text.text!!.length < 8){
             edit_profile_password.boxStrokeColor = Color.RED
@@ -117,12 +122,20 @@ class EditProfileFragment : Fragment() {
             }
             else{
                 mViewModel.dismissDialog()
-
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    Snackbar.make(edit_profile_fragment_constraint_layout, "Profile Updated", Snackbar.LENGTH_LONG)
-                        .setIcon(getDrawable(requireContext(), R.drawable.ic_check)!!, resources.getColor(
-                            R.color.white
-                        )).show()
+                    if (edit_profile_fragment_constraint_layout != null) {
+                        Snackbar.make(
+                            edit_profile_fragment_constraint_layout,
+                            "Profile Updated",
+                            Snackbar.LENGTH_LONG
+                        )
+                            .setIcon(
+                                getDrawable(requireContext(), R.drawable.ic_check)!!,
+                                resources.getColor(
+                                    R.color.white
+                                )
+                            ).show()
+                    }
                 }
                 Navigation.findNavController(view).navigate(R.id.action_editProfileFragment_to_myProfileFragment)
             }

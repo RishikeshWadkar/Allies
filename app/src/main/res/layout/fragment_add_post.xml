@@ -2,48 +2,53 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addPostConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.post.AddPostFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/addPostTextInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="242dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:hint="Write Something"
-        app:counterEnabled="true"
-        app:counterMaxLength="280"
-        app:helperText="*Required"
-        app:helperTextTextColor="@color/red"
-        app:hintEnabled="true"
+        android:background="@drawable/add_post_background_shape"
+        android:ems="10"
+        android:gravity="clip_vertical"
+        android:hint="Enter Text..."
+        android:inputType="textMultiLine|text"
+        android:padding="8dp"
+        android:singleLine="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addPostTextInputText"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:gravity="top"
-            android:inputType="text"
-            android:maxLength="280"
-            android:singleLine="false"
-            android:maxLines="5"/>
-    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/add_post_helper_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#FF0000"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/addPostTextInput"
+        app:layout_constraintTop_toBottomOf="@+id/addPostTextInput"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/submitPostbtn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:text="Submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addPostTextInput" />
+        android:layout_marginTop="8dp"
+        android:background="@drawable/add_post_background_shape"
+        android:text="POST"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="@+id/addPostTextInput"
+        app:layout_constraintStart_toStartOf="@+id/addPostTextInput"
+        app:layout_constraintTop_toBottomOf="@+id/add_post_helper_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

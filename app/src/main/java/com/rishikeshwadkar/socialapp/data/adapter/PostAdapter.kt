@@ -19,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.Utils
+import com.rishikeshwadkar.socialapp.data.dao.PostDao
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.Post
 import com.rishikeshwadkar.socialapp.data.models.User
@@ -34,6 +35,7 @@ import kotlinx.coroutines.tasks.await
 class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener: IPostAdapter) : FirestoreRecyclerAdapter<Post, PostAdapter.PostViewHolder>(options) {
 
     private var mItemCounter = 0
+    private val postDao: PostDao = PostDao()
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val userName: TextView = itemView.userName
@@ -87,6 +89,7 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener:
         val userDao = UserDao()
         val postUserName = model.createdBy.userDisplayName
         val postPhotoUrl: String = model.createdBy.userImage
+        val createdByAlliesList: ArrayList<String> = model.createdBy.userAllies
 
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userDao.getUserById(model.createdBy.uid).await().toObject(User::class.java)!!
@@ -114,8 +117,15 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private val listener:
                         }
                     }
             }
-        }
 
+            if (createdByAlliesList != user.userAllies){
+                postDao.postCollection.whereEqualTo("createdBy.uid", user.uid).get().addOnSuccessListener { posts ->
+                    for (post in posts){
+                        postDao.postCollection.document(post.id).update("createdBy.userAllies", user.userAllies)
+                    }
+                }
+            }
+        }
     }
 
     interface IPostAdapter{

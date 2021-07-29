@@ -23,6 +23,7 @@ import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
+import kotlinx.android.synthetic.main.fragment_add_post.*
 import kotlinx.android.synthetic.main.fragment_signin.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -79,10 +80,26 @@ class SigninFragment : Fragment() {
         if(email!!.isEmpty()){
             sign_in_email_address.requestFocus()
             sign_in_email_address.helperText = "*Required"
+            if (sign_in_constraint_layout != null) {
+                Snackbar.make(
+                    sign_in_constraint_layout,
+                    "Enter your email...",
+                    Snackbar.LENGTH_SHORT
+                )
+                    .setAction("Action", null).show()
+            }
         }
         else if(password!!.isEmpty()){
             sign_in_password.requestFocus()
             sign_in_password.helperText = "*Required"
+            if (sign_in_constraint_layout != null) {
+                Snackbar.make(
+                    sign_in_constraint_layout,
+                    "Enter your password...",
+                    Snackbar.LENGTH_SHORT
+                )
+                    .setAction("Action", null).show()
+            }
         }
         else{
             FirebaseAuth.getInstance().signInWithEmailAndPassword(

@@ -34,7 +34,7 @@ class NotificationsViewPagerFragment : Fragment() {
         viewPager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewPager2.adapter = vpAdapter
 
-        tabLayout.getTabAt(0)?.orCreateBadge?.number = 1
+        tabLayout.getTabAt(0)?.orCreateBadge?.number = 0
 
         if (tabLayout.getTabAt(0)?.badge?.number == 0)
             tabLayout.getTabAt(0)!!.removeBadge()
