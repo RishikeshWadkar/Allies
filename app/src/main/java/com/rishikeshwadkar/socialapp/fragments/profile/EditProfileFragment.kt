@@ -54,7 +54,11 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        edit_profile_email_text.isClickable = false
         setData()
+
+        edit_profile_email.boxStrokeColor = Color.GRAY
+
         edit_proflle_save_btn.setOnClickListener {
             updateData(view)
         }
@@ -72,6 +76,7 @@ class EditProfileFragment : Fragment() {
                 if (mThis.isVisible){
                     Glide.with(edit_profile_user_image).load(user.userImage).circleCrop().into(edit_profile_user_image)
                     edit_profile_password_text.setText(user.userPassword)
+                    edit_profile_name_text.setText(user.userDisplayName)
                     if(user.userPhoneNo != null)
                         edit_profile_phone_text.setText(user.userPhoneNo)
                     else
@@ -79,7 +84,6 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
-        edit_profile_name_text.setText(currentUser!!.displayName)
         edit_profile_email_text.setText(currentUser.email)
         edit_profile_name.clearFocus()
         edit_profile_name_text.clearFocus()
@@ -97,10 +101,22 @@ class EditProfileFragment : Fragment() {
         else if(edit_profile_password_text.text?.isEmpty() == true || edit_profile_password_text.text!!.length < 8){
             edit_profile_password.boxStrokeColor = Color.RED
             edit_profile_password_text.requestFocus()
+            if (edit_profile_fragment_constraint_layout != null && edit_profile_password_text.text?.isEmpty() == true){
+                Snackbar.make(edit_profile_fragment_constraint_layout, "password should not be empty...", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            }
+            else if (edit_profile_fragment_constraint_layout != null && edit_profile_password_text.text!!.length < 8){
+                Snackbar.make(edit_profile_fragment_constraint_layout, "Enter at least 8 characters...", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            }
         }
         else if(edit_profile_phone_text.text?.isNotEmpty() == true && edit_profile_phone_text.text!!.length < 10){
             edit_profile_phone.boxStrokeColor = Color.RED
             edit_profile_phone_text.requestFocus()
+            if (edit_profile_fragment_constraint_layout != null){
+                Snackbar.make(edit_profile_fragment_constraint_layout, "Invalid Phone No.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            }
         }
         else{
             mViewModel.showDialog(requireContext(), "Updating your data")

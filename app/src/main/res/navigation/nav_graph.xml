@@ -86,7 +86,7 @@
         tools:layout="@layout/fragment_notifications_view_pager" >
         <action
             android:id="@+id/action_notificationsViewPagerFragment_to_notificationsFragment2"
-            app:destination="@id/notificationsFragment2" />
+            app:destination="@id/sentFriendRequestFragment" />
         <action
             android:id="@+id/action_notificationsViewPagerFragment_to_friendRequestsFragment"
             app:destination="@id/friendRequestsFragment" />
@@ -98,7 +98,7 @@
             app:destination="@id/singlePostFragment" />
     </fragment>
     <fragment
-        android:id="@+id/notificationsFragment2"
+        android:id="@+id/sentFriendRequestFragment"
         android:name="com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" >

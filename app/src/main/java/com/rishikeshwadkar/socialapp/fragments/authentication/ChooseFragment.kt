@@ -28,12 +28,6 @@ class ChooseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        GlobalScope.launch(Dispatchers.IO) {
-            lottieAnimationView2.setAnimation("home_animation.json")
-            //lottieAnimationView2.playAnimation()
-        }
-
-
         welcome_login_btn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_chooseFragment_to_signinFragment)
         }

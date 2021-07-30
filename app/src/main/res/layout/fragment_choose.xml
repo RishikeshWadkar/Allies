@@ -6,22 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".fragments.authentication.ChooseFragment">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieAnimationView2"
-        android:layout_width="300sp"
-        android:layout_height="300sp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_allies_logo" />
-
     <ImageView
         android:id="@+id/welcome_allies_logo"
         android:layout_width="136dp"
         android:layout_height="53dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/logo_with_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lottieAnimationView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -60,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif"
-        android:text="LOGIN"
+        android:text="SIGN IN"
         android:textSize="18sp"
         app:backgroundTint="@color/light_blue"
         app:layout_constraintBottom_toTopOf="@+id/welcome_signup_btn"
@@ -74,11 +64,12 @@
         android:layout_width="170sp"
         android:layout_height="40sp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/signup_bg"
         android:fontFamily="sans-serif"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="SIGNUP"
+        android:text="SIGN UP"
         android:textColor="@color/light_blue"
         android:textSize="18sp"
         app:backgroundTint="@null"
@@ -86,6 +77,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_login_btn" />
+        app:layout_constraintTop_toBottomOf="@+id/welcome_login_btn"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="32dp"
+        android:padding="20dp"
+        android:src="@drawable/splash_image"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_hello_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_allies_logo"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

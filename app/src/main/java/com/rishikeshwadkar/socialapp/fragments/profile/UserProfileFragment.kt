@@ -1,7 +1,6 @@
 package com.rishikeshwadkar.socialapp.fragments.profile
 
 import android.os.Bundle
-import android.text.format.Time
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,9 +12,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.crashlytics.internal.common.CurrentTimeProvider
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.rishikeshwadkar.socialapp.R
@@ -58,8 +56,7 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
         }
 
         user_profile_msg_user.setOnClickListener {
-            val action = UserProfileFragmentDirections.actionUserProfileFragmentToChatWithUserFragment(mNavArgs.uid)
-            Navigation.findNavController(view).navigate(action)
+            checkIfHeUnfriendedMe(mNavArgs.uid)
         }
 
         user_profile_allies_number_tv.setOnClickListener {
@@ -75,22 +72,41 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
 
     private fun addToAllies() {
         if (user_profile_add_to_allies_btn.text == "Add to Allies"){
-            userDao.addRequest(Firebase.auth.currentUser!!.uid, mNavArgs.uid,null, 0)
             CoroutineScope(Dispatchers.IO).launch {
                 val user: User = userDao.getUserById(Firebase.auth.currentUser!!.uid)
                         .await().toObject(User::class.java)!!
-                val currentTime: Long = System.currentTimeMillis()
-                val notification: Notification = Notification(
-                        "Request",
-                        user.uid,
-                        mNavArgs.uid,
-                        "${user.userDisplayName} sent you an allies friend request",
-                        currentTime,
-                        ""
-                )
-                notificationsDao.addAddToAllieRequestsNotification(notification)
+                withContext(Dispatchers.Main){
+                    if (user.userRequests.contains(mNavArgs.uid)){
+                        userDao.addToAllies(Firebase.auth.currentUser!!.uid, mNavArgs.uid)
+                        user_profile_add_to_allies_btn.text = "Allies"
+                        user_profile_msg_user.visibility = View.VISIBLE
+
+                        notificationsDao.notificationsCollection.whereEqualTo("from", mNavArgs.uid)
+                            .whereEqualTo("type", "Request")
+                            .whereEqualTo("to", Firebase.auth.currentUser!!.uid).get().addOnSuccessListener { documents ->
+                                for (document in documents){
+                                    Log.d("removeNotification", document.id)
+                                    notificationsDao.removeNotification(document.id)
+                                }
+                            }
+
+                    }
+                    else{
+                        userDao.addRequest(Firebase.auth.currentUser!!.uid, mNavArgs.uid,null, 0)
+                        val currentTime: Long = System.currentTimeMillis()
+                        val notification = Notification(
+                            "Request",
+                            user.uid,
+                            mNavArgs.uid,
+                            "${user.userDisplayName} sent you an allies friend request",
+                            currentTime,
+                            ""
+                        )
+                        notificationsDao.addAddToAllieRequestsNotification(notification)
+                        user_profile_add_to_allies_btn.text = "Request Sent"
+                    }
+                }
             }
-            user_profile_add_to_allies_btn.text = "Request Sent"
         }
         else if (user_profile_add_to_allies_btn.text == "Request Sent"){
             mViewModel.setUpMaterialDialogRemoveRequest(
@@ -105,17 +121,34 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     "Removing")
         }
         else if (user_profile_add_to_allies_btn.text == "Accept"){
-            userDao.addToAllies(Firebase.auth.uid!!, mNavArgs.uid)
-            Log.d("removeNotification", "currUID -> ${Firebase.auth.currentUser!!.uid} oppositeUid -> $mNavArgs")
-            notificationsDao.notificationsCollection.whereEqualTo("from", mNavArgs.uid)
-                    .whereEqualTo("type", "Request")
-                    .whereEqualTo("to", Firebase.auth.currentUser!!.uid).get().addOnSuccessListener { documents ->
-                        for (document in documents){
-                            Log.d("removeNotification", document.id)
-                            notificationsDao.removeNotification(document.id)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val oppositeUser: User = userDao.getUserById(mNavArgs.uid).await().toObject(User::class.java)!!
+                withContext(Dispatchers.Main){
+                    if (!oppositeUser.userRequestSent.contains(Firebase.auth.currentUser!!.uid)){
+                        if (user_profile_constraint_layout != null){
+                            Snackbar.make(user_profile_constraint_layout, "Allies request from ${oppositeUser.userDisplayName} has been removed...", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                            user_profile_add_to_allies_btn.text = "Add to Allies"
                         }
                     }
-            user_profile_add_to_allies_btn.text = "Allies"
+                    else{
+                        userDao.addToAllies(Firebase.auth.uid!!, mNavArgs.uid)
+                        Log.d("removeNotification", "currUID -> ${Firebase.auth.currentUser!!.uid} oppositeUid -> $mNavArgs")
+                        notificationsDao.notificationsCollection.whereEqualTo("from", mNavArgs.uid)
+                            .whereEqualTo("type", "Request")
+                            .whereEqualTo("to", Firebase.auth.currentUser!!.uid).get().addOnSuccessListener { documents ->
+                                for (document in documents){
+                                    Log.d("removeNotification", document.id)
+                                    notificationsDao.removeNotification(document.id)
+                                }
+                            }
+                        user_profile_add_to_allies_btn.text = "Allies"
+                        user_profile_msg_user.visibility = View.VISIBLE
+                    }
+                }
+            }
+
         }
         else if (user_profile_add_to_allies_btn.text == "Allies"){
             mViewModel.setupMaterialDialogRemoveAllies(requireContext(),
@@ -174,6 +207,25 @@ class UserProfileFragment : Fragment(), PostAdapter.IPostAdapter {
                     }
                 }
                 user_profile_allies_number_tv.text = oppositeUser.userAllies.size.toString()
+            }
+        }
+    }
+
+    private fun checkIfHeUnfriendedMe(oppositeUid: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val oppositeUser: User = userDao.getUserById(oppositeUid).await().toObject(User::class.java)!!
+            withContext(Dispatchers.Main){
+                if (!(oppositeUser.userAllies.contains(Firebase.auth.currentUser!!.uid))){
+                    Snackbar.make(user_profile_constraint_layout, "${oppositeUser.userDisplayName} Just removed you from allies list", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show()
+
+                    user_profile_add_to_allies_btn.text = "Add to Allies"
+                    user_profile_msg_user.visibility = View.GONE
+                }
+                else{
+                    val action = UserProfileFragmentDirections.actionUserProfileFragmentToChatWithUserFragment(mNavArgs.uid)
+                    Navigation.findNavController(requireView()).navigate(action)
+                }
             }
         }
     }

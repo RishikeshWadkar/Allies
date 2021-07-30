@@ -34,13 +34,10 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import dev.shreyaspatil.MaterialDialog.MaterialDialog
 import kotlinx.android.synthetic.main.fragment_user_profile.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
-import java.lang.Error
+import com.rishikeshwadkar.socialapp.activities.SignInActivity
 
 
 class MyViewModel(application: Application): AndroidViewModel(application) {
@@ -204,6 +201,9 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 showDialog(context, "Removing")
                 context.user_profile_add_to_allies_btn?.text = "Add to Allies"
                 removeFromAllies(uid, likerUid, adapter, position)
+            if (context.user_profile_constraint_layout != null){
+                context.user_profile_msg_user.visibility = View.GONE
+            }
 
         }.setNegativeButton(
             "Cancel", R.drawable.added_button_shape
@@ -289,8 +289,27 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 positiveBtn,
                 R.drawable.add_button_shape
         ){ dialogInterface, which ->
-            dialogInterface.dismiss()
-            removeRequest(fromUid, toUid, adapter,position)
+            CoroutineScope(Dispatchers.IO).launch {
+                val user: User = userDao.getUserById(fromUid).await().toObject(User::class.java)!!
+                withContext(Dispatchers.Main){
+                    if (user.userAllies.contains(toUid)){
+                        if (context.user_profile_msg_user != null){
+                            Snackbar.make(context.user_profile_msg_user, "The other person accepted your allies request..", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                            context.user_profile_add_to_allies_btn.text = "Allies"
+                            context.user_profile_msg_user.visibility = View.VISIBLE
+                            dialogInterface.dismiss()
+                        }
+                        else{
+                            dialogInterface.dismiss()
+                        }
+                    }
+                    else{
+                        dialogInterface.dismiss()
+                        removeRequest(fromUid, toUid, adapter,position)
+                    }
+                }
+            }
             //showDialog(context, loadingText)
             try {
                 context.user_profile_add_to_allies_btn.text = "Add to Allies"
@@ -300,5 +319,37 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
                 "Cancel", R.drawable.added_button_shape
         ) { dialogInterface, which -> dialogInterface.dismiss() }
                 .build().show()
+    }
+
+    fun setUpMaterialDialogCommon(
+        context: Context,
+        title: String,
+        msg: String,
+        positiveBtn: String,
+        loadingText: String
+    ){
+        val activity = context as Activity
+
+        mDialog = MaterialDialog.Builder(context)
+        mDialog.setTitle(title)
+        mDialog.setMessage(msg)
+        mDialog.setCancelable(false)
+        mDialog.setAnimation("log_out.json")
+        mDialog.setPositiveButton(
+            positiveBtn,
+            R.drawable.add_button_shape
+        ){ dialogInterface, which ->
+
+            showDialog(context, loadingText)
+            Firebase.auth.signOut()
+            val intent = Intent(context, SignInActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP and Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            context.startActivity(intent)
+            activity.finish()
+
+        }.setNegativeButton(
+            "Cancel", R.drawable.added_button_shape
+        ) { dialogInterface, which -> dialogInterface.dismiss() }
+            .build().show()
     }
 }

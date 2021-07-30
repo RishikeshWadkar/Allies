@@ -79,12 +79,16 @@ class UserDao {
         GlobalScope.launch(Dispatchers.IO) {
             val user: User = userCollection.document(uid).get().await().toObject(User::class.java)!!
             val oppositeUser: User = userCollection.document(likerUid).get().await().toObject(User::class.java)!!
-            user.userRequests.remove(likerUid)
-            user.userAllies.add(likerUid)
-            oppositeUser.userRequestSent.remove(uid)
-            oppositeUser.userAllies.add(uid)
-            userCollection.document(uid).set(user)
-            userCollection.document(likerUid).set(oppositeUser)
+
+            if (!user.userAllies.contains(oppositeUser.uid)){
+                user.userRequests.remove(likerUid)
+                user.userAllies.add(likerUid)
+                oppositeUser.userRequestSent.remove(uid)
+                oppositeUser.userAllies.add(uid)
+                userCollection.document(uid).set(user)
+                userCollection.document(likerUid).set(oppositeUser)
+            }
+
         }
     }
 

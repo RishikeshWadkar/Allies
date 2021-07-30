@@ -1,26 +1,24 @@
 package com.rishikeshwadkar.socialapp.activities
-import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.*
-import android.widget.Toolbar
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.*
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.FirebaseMessagingKtxRegistrar
 import com.rishikeshwadkar.socialapp.R
 import com.rishikeshwadkar.socialapp.data.dao.ChatDao
 import com.rishikeshwadkar.socialapp.data.dao.NotificationsDao
-import com.rishikeshwadkar.socialapp.fragments.notification.NotificationsFragment
+import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_notifications_view_pager.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 
 class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMenuItemClickListener {
@@ -30,12 +28,11 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
     private var tempBool: Boolean = true
     private val notificationsDao = NotificationsDao()
     private val chatDao = ChatDao()
+    private val mViewModel: MyViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
 
         navHostFragment = supportFragmentManager.findFragmentById(R.id.navHost) as NavHostFragment
         navController = Navigation.findNavController(this, R.id.navHost)
@@ -43,18 +40,21 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
 
         toolbar2.setOnMenuItemClickListener(this)
         val notificationBtn = toolbar2.menu.findItem(R.id.notificationFragment)
+        toolbar2.main_logout_btn.visibility = View.INVISIBLE
 
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if(destination.id == R.id.notificationsViewPagerFragment){
+            if(destination.id == R.id.notificationsViewPagerFragment ||
+                destination.id == R.id.notificationFragment ||
+                destination.id == R.id.sentFriendRequestFragment){
+                handler.removeCallbacks(runnable)
                 notificationBtn.setIcon( R.drawable.ic_notification_selected)
                 tempBool = false
-                handler.removeCallbacks(runnable)
             }
             else{
                 notificationBtn.setIcon(R.drawable.ic_no_notification_unselected)
                 tempBool = true
-                handler.removeCallbacks(runnable)
+                handler.post(runnable)
             }
 
             if (destination.id == R.id.chatWithUserFragment){
@@ -66,6 +66,18 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
                 bottomNavigationView.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE
                 this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            }
+
+            if (destination.id == R.id.myProfileFragment){
+                toolbar2.main_logout_btn.visibility = View.VISIBLE
+                toolbar2.main_logout_btn.setOnClickListener {
+                    handler.removeCallbacks(runnable)
+                    chatHandler.removeCallbacks(chatRunnable)
+                    mViewModel.setUpMaterialDialogCommon(this, "Sign Out", "Are you sure?", "Sign out", "Signing out")
+                }
+            }
+            else{
+                toolbar2.main_logout_btn.visibility = View.INVISIBLE
             }
         }
 
@@ -86,19 +98,40 @@ class MainActivity : AppCompatActivity(), androidx.appcompat.widget.Toolbar.OnMe
     private val runnable: Runnable = object : Runnable {
         override fun run() {
             setNotificationDot()
-            setChatDot()
             handler.postDelayed(this, 100)
+        }
+    }
+
+    private val chatHandler: Handler = Handler()
+    private val chatRunnable: Runnable = object : Runnable {
+        override fun run() {
+            setChatDot()
+            chatHandler.postDelayed(this, 100)
         }
     }
 
     override fun onStart() {
         super.onStart()
         handler.postDelayed(runnable, 100)
+        chatHandler.postDelayed(chatRunnable, 100)
     }
 
     override fun onStop() {
         super.onStop()
         handler.removeCallbacks(runnable)
+        chatHandler.removeCallbacks(chatRunnable)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(runnable)
+        chatHandler.removeCallbacks(chatRunnable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(runnable)
+        chatHandler.removeCallbacks(chatRunnable)
     }
 
     private fun setChatDot() {

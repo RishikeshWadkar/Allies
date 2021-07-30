@@ -1,6 +1,7 @@
 package com.rishikeshwadkar.socialapp.fragments.authentication
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -24,6 +26,7 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_add_post.*
+import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.fragment_signin.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
@@ -56,6 +59,13 @@ class SigninFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         auth = Firebase.auth
 
+        sign_in_forgot_password.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_signinFragment_to_forgotPasswordFragment)
+        }
+
+        sign_in_back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         sign_in_login_button.setOnClickListener {
             performSignIN()
@@ -74,6 +84,7 @@ class SigninFragment : Fragment() {
     //==============================================================================================
 
     private fun performSignIN(){
+
         val email = sign_in_email_address_text.text
         val password = sign_in_password_text.text
 
@@ -102,6 +113,11 @@ class SigninFragment : Fragment() {
             }
         }
         else{
+            mViewModel.showDialog(
+                requireContext(),
+                "Signing in"
+            )
+
             FirebaseAuth.getInstance().signInWithEmailAndPassword(
                 email.toString(),
                 password.toString()
@@ -111,11 +127,56 @@ class SigninFragment : Fragment() {
                             "userSignIn",
                             "SignInWithEmailAndPass   email: $email password: $password"
                         )
+                        mViewModel.dismissDialog()
                         mViewModel.updateUI(it.user, requireContext())
             }
-                    .addOnFailureListener {
-                        Log.d("userSignIn", "${it.message}")
+                .addOnFailureListener {
+                    Log.d("signinLog", it.message.toString())
+                    it.message?.let { it1 -> Log.d("main", it1)
+                        var msg: String = it1
+                        if(it1 == "The email address is badly formatted."){
+                            mViewModel.dismissDialog()
+                            sign_in_email_address_text.requestFocus()
+                            msg = "Please enter a valid email address..."
+                            if (sign_in_constraint_layout != null) {
+                                val snackbar = Snackbar.make(
+                                    sign_in_constraint_layout, msg,
+                                    Snackbar.LENGTH_LONG
+                                ).setAction("Action", null)
+                                snackbar.setTextColor(Color.WHITE)
+                                snackbar.show()
+                            }
+                        }
+                        else if (it1 == "There is no user record corresponding to this identifier. The user may have been deleted."){
+                            mViewModel.dismissDialog()
+                            msg = "New user account please Sign up..."
+                            if (sign_in_constraint_layout != null) {
+                                val snackbar = Snackbar.make(
+                                    sign_in_constraint_layout, msg,
+                                    Snackbar.LENGTH_LONG
+                                ).setAction("Sign up") {
+                                    Navigation.findNavController(requireView())
+                                        .navigate(R.id.action_signinFragment_to_signUpFragment)
+                                }
+                                snackbar.setTextColor(Color.WHITE)
+                                snackbar.setActionTextColor(Color.parseColor("#FFBB86FC"))
+                                snackbar.show()
+                            }
+                        }
+                        else if (it1 == "The password is invalid or the user does not have a password."){
+                            mViewModel.dismissDialog()
+                            msg = "Incorrect Password..."
+                            if (sign_in_constraint_layout != null) {
+                                val snackbar = Snackbar.make(
+                                    sign_in_constraint_layout, msg,
+                                    Snackbar.LENGTH_LONG
+                                ).setAction("action", null)
+                                snackbar.setTextColor(Color.WHITE)
+                                snackbar.show()
+                            }
+                        }
                     }
+                }
         }
     }
 

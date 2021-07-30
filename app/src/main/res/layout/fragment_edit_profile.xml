@@ -90,6 +90,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Email"
+        android:clickable="false"
+        android:focusable="false"
         app:helperTextTextColor="@color/red"
         app:layout_constraintBottom_toTopOf="@+id/edit_profile_password"
         app:layout_constraintEnd_toEndOf="@+id/edit_profile_phone"
@@ -100,6 +102,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_profile_email_text"
+            android:editable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/museo500" />
@@ -112,6 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="Password"
+        app:counterEnabled="true"
         app:helperTextTextColor="@color/red"
         app:layout_constraintBottom_toTopOf="@+id/edit_proflle_save_btn"
         app:layout_constraintEnd_toEndOf="@+id/edit_profile_email"

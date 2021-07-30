@@ -26,6 +26,7 @@ import com.rishikeshwadkar.socialapp.data.dao.UserDao
 import com.rishikeshwadkar.socialapp.data.models.User
 import com.rishikeshwadkar.socialapp.data.viewmodels.MyViewModel
 import kotlinx.android.synthetic.main.fragment_add_post.*
+import kotlinx.android.synthetic.main.fragment_setup_password.*
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -63,6 +64,10 @@ class SignUpFragment : Fragment() {
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         auth = Firebase.auth
 
+        sign_up_back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
         sign_up_google_login.setOnClickListener {
             Log.i("myTag","Button Clicked")
             mViewModel.showDialog(requireContext(), "Authenticating with Google")
@@ -91,17 +96,43 @@ class SignUpFragment : Fragment() {
         val phoneNo = sign_up_phone_text.text
         val pass = sign_up_password_text.text
 
+        mViewModel.showDialog(requireContext(), "Signing Up..")
+
         if(name!!.isNotEmpty()){
+            sign_up_name.helperText = ""
             if(emailID!!.isNotEmpty()){
+                sign_up_email.helperText = ""
                     if(pass!!.isNotEmpty()){
+                        if(pass.count() < 8){
+                            if (signUpConstraintLayout != null){
+                                Snackbar.make(signUpConstraintLayout, "Password should be at least 8 Characters...", Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show()
+                            }
+                            sign_up_password.requestFocus()
+                            mViewModel.dismissDialog()
+                            return
+                        }
+
+                        if(phoneNo.toString().isNotEmpty() && phoneNo?.count() != 10){
+                            if (signUpConstraintLayout != null){
+                                Snackbar.make(signUpConstraintLayout, "Enter a valid phone No.", Snackbar.LENGTH_SHORT)
+                                    .setAction("Action", null).show()
+                            }
+                            sign_up_phone.requestFocus()
+                            mViewModel.dismissDialog()
+                            return
+                        }
+                        sign_up_password.helperText = ""
                         FirebaseAuth.getInstance().
                         createUserWithEmailAndPassword(emailID.toString(), pass.toString())
                                 .addOnCompleteListener {
                                     if(it.isSuccessful){
                                         Log.d("main", it.result?.user!!.uid)
+                                        mViewModel.dismissDialog()
                                         mViewModel.updateUIEmail(it.result?.user!!.uid,name.toString(),emailID.toString(),phoneNo.toString(),pass.toString(),"", requireContext())
                                     }
                                     else{
+                                        mViewModel.dismissDialog()
                                         it.exception?.message?.let { it1 -> Log.d("main", it1)
                                             var msg: String = it1
                                             if(it1 == "The email address is already in use by another account."){
@@ -136,6 +167,7 @@ class SignUpFragment : Fragment() {
                                     }
                                 }
                     }else{
+                        mViewModel.dismissDialog()
                         if (signUpConstraintLayout != null) {
                             Snackbar.make(
                                 signUpConstraintLayout,
@@ -148,6 +180,7 @@ class SignUpFragment : Fragment() {
                         }
                     }
             } else{
+                mViewModel.dismissDialog()
                 if (signUpConstraintLayout != null) {
                     Snackbar.make(
                         signUpConstraintLayout,
@@ -160,6 +193,7 @@ class SignUpFragment : Fragment() {
                 }
             }
         } else{
+            mViewModel.dismissDialog()
             if (signUpConstraintLayout != null) {
                 Snackbar.make(signUpConstraintLayout, "Enter your name...", Snackbar.LENGTH_SHORT)
                     .setAction("Action", null).show()
