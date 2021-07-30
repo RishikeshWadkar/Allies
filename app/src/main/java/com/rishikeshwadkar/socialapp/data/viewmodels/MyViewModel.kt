@@ -48,6 +48,8 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     private val notificationsDao = NotificationsDao()
     private lateinit var mDialog: MaterialDialog.Builder
 
+    // View Model
+
     fun updateUI(firebaseUser: FirebaseUser?, context: Context): Boolean {
         if(firebaseUser != null){
             Log.i("myTag", "firebase user != NULL")
