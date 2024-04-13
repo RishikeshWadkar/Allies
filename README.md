@@ -1,5 +1,1 @@
-![unnamed (5)](https://github.com/RishikeshWadkar/Allies/assets/59508176/6b5355a0-25ad-4ef6-b653-9afbae7cd0ca)
-![unnamed (4)](https://github.com/RishikeshWadkar/Allies/assets/59508176/ca568a18-850e-4fa0-9893-ab7dd990b060)
-![unnamed (3)](https://github.com/RishikeshWadkar/Allies/assets/59508176/88475fc6-b3b9-4fdc-87da-6366ee46f5e4)
-![unnamed (2)](https://github.com/RishikeshWadkar/Allies/assets/59508176/05b9032a-18e1-42b7-8bf4-9e969b91523f)
-![unnamed (1)](https://github.com/RishikeshWadkar/Allies/assets/59508176/7fae863b-029f-474c-9fcc-f343ca4aa438)
+
